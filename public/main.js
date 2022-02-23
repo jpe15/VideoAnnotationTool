@@ -1,7 +1,9 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
 const path = require('path')
 const isDev = require('electron-is-dev')
+
+const fs = require('fs')
 
 require('@electron/remote/main').initialize()
 
@@ -12,7 +14,8 @@ function createWindow() {
     height: 1080,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      contextIsolation: false
     }
   })
 
@@ -39,3 +42,17 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+
+// Receives communications from export button, through 'export' channel
+// args = { message: string, data: object }
+ipcMain.on('export', (event, args) => {
+  console.log('Message received:', args.message)
+  exportData(args.data)
+})
+
+async function exportData(data) {
+  fs.writeFile(path.resolve(__dirname, 'export.json'), JSON.stringify(data), (err) => {
+      if (err) throw err;
+      console.log('The file has been saved!');
+  });
+}
