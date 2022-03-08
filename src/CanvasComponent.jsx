@@ -1,13 +1,27 @@
 import React from 'react';
-import { useState } from 'react'
-import VideoPlayer from "./VideoPlayer.jsx"
+import { useState, useRef } from 'react'
+import "./styles/Canvas.css"
 
-const CanvasComponent = (props) => {
-	return (
-		<div className="CanvasComponent">
-			<VideoPlayer videoSrc={props.videoSrc}></VideoPlayer>
-		</div>
-	);
+class CanvasComponent extends React.Component {
+	// currentTool stores which tool is currently being used.
+	// 0 == Box, 1 == Polygon, 2 == Freehand
+	constructor(props) {
+		super(props);
+		this.state = {
+			currentTool: 0,
+		}
+	}
+
+	render() {
+		return (
+			<div className="CanvasComponent">
+				<video className="video" controls>
+					<source src={this.props.videoSrc} type="video/mp4"/>
+				</video>
+				<canvas ref="canvas" className="canvas"/>
+			</div>
+		);
+	}
 }
 
 export default CanvasComponent;
