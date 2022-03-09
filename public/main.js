@@ -3,13 +3,15 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
 
-const fs = require('fs')
+const exportData = require('./export')
 
 require('@electron/remote/main').initialize()
 
+let win = null
+
 function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1920,
     height: 1080,
     webPreferences: {
@@ -44,15 +46,13 @@ app.on('activate', function () {
 })
 
 // Receives communications from export button, through 'export' channel
-// args = { message: string, data: object }
+// args = { projName: string, data: object }
 ipcMain.on('export', (event, args) => {
-  console.log('Message received:', args.message)
-  exportData(args.data)
+  exportData(args.projName, args.data)
+  .then(res => {
+    win.send('exported', res)
+  })
+  .catch(err => {
+    console.error(err)
+  })
 })
-
-async function exportData(data) {
-  fs.writeFile(path.resolve(__dirname, 'export.json'), JSON.stringify(data), (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-  });
-}
