@@ -12,10 +12,14 @@ class CanvasComponent extends React.Component {
 		}
 	}
 
+	resizeCanvas() {
+		console.log(this.refs.video);
+	}
+
 	render() {
 		return (
 			<div className="CanvasComponent">
-				<video className="video" controls>
+				<video ref="video" className="video" onLoadedData={() => this.resizeCanvas()} autoPlay controls>
 					<source src={this.props.videoSrc} type="video/mp4"/>
 				</video>
 				<canvas ref="canvas" className="canvas"/>
