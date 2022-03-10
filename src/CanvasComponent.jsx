@@ -18,16 +18,14 @@ function CanvasComponent(props) {
 	// Function that will run once the video is loaded and resize the canvas to match.
 	const resizeCanvas = () => {
 		// Get video dimensions.
-		const width = videoElement.current.videoWidth;
-		const height = videoElement.current.videoHeight;
+		const width = videoElement.current.getBoundingClientRect().width;
+		const height = videoElement.current.getBoundingClientRect().height;
 
 		console.log(width, height);
 
 		// Resize canvas.
 		setCanvasWidth(width);
 		setCanvasHeight(height);
-		
-		console.log(canvasWidth, canvasHeight);
 	}
 
 	return (
