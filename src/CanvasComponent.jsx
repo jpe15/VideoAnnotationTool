@@ -15,6 +15,8 @@ function CanvasComponent(props) {
 	// Stores the context for drawing the box as the user is drawing it
 	let currentContext;
 
+	// Stores all of the annotations
+	let annotations = [];
 
 	// Create variables used to change canvas size.
 	const [canvasWidth, setCanvasWidth] = useState(0);
@@ -92,16 +94,16 @@ function CanvasComponent(props) {
 	}
 
 	const mouseMove = (e) => {
-		// Get the current mouse position.
-		const clientX = e.clientX;
-		const clientY = e.clientY;
-		// Convert to percentage of canvas.
-		const [xPercent, yPercent] = coordsToPercent(clientX, clientY);
-		// Convert to canvas position.
-		const [endX, endY] = percentToCanvasPixels(xPercent, yPercent);
-
 		// Check if we are currently drawing a box
 		if(drawingBox) {
+			// Get the current mouse position.
+			const clientX = e.clientX;
+			const clientY = e.clientY;
+			// Convert to percentage of canvas.
+			const [xPercent, yPercent] = coordsToPercent(clientX, clientY);
+			// Convert to canvas position.
+			const [endX, endY] = percentToCanvasPixels(xPercent, yPercent);
+
 			// Clear the last frame of drawing.
 			currentContext.clearRect(0, 0, 
 				canvasElement.current.getBoundingClientRect().width, canvasElement.current.getBoundingClientRect().height);
@@ -110,6 +112,44 @@ function CanvasComponent(props) {
 			console.log(startX, startY);
 			// Draw our current box.
 			currentContext.strokeRect(startX, startY, endX-startX, endY-startY);
+		}
+	}
+
+	const mouseUp = (e) => {
+		console.log("MOUSE UP");
+		// Check if we are currently drawing a box
+		if(drawingBox) {
+			// Get the current mouse position.
+			const clientX = e.clientX;
+			const clientY = e.clientY;
+			// Convert to percentage of canvas.
+			const [xPercent, yPercent] = coordsToPercent(clientX, clientY);
+			// Convert to canvas position.
+			const [endX, endY] = percentToCanvasPixels(xPercent, yPercent);
+
+			// Clear the last frame of drawing.
+			currentContext.clearRect(0, 0, 
+				canvasElement.current.getBoundingClientRect().width, canvasElement.current.getBoundingClientRect().height);
+			// Convert the starting X Y percentages into coordinates for drawing.
+			const [startX, startY] = percentToCanvasPixels(initialX, initialY);
+			console.log(startX, startY);
+			// Draw our current box.
+			currentContext.strokeRect(startX, startY, endX-startX, endY-startY);
+
+			// Add this to the list of annotations.
+			let newAnnotation = {}
+			newAnnotation["type"] = "BOX";
+			newAnnotation["start"] = [initialX, initialY];
+			newAnnotation["end"] = [xPercent, yPercent];
+			newAnnotation["context"] = currentContext;
+
+			annotations.push(newAnnotation);
+
+			// Clear the reference to this context.
+			currentContext = null;
+
+			// We are no longer drawing.
+			drawingBox = false;
 		}
 	}
 
@@ -122,6 +162,7 @@ function CanvasComponent(props) {
 				ref={canvasElement} 
 				onMouseDown={(e) => mouseDown(e)} 
 				onMouseMove={(e) => mouseMove(e)} 
+				onMouseUp  ={(e) => mouseUp(e)}
 				width={canvasWidth+"px"} 
 				height={canvasHeight+"px"} 
 				className="canvas"/>
