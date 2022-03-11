@@ -118,7 +118,13 @@ function CanvasComponent(props) {
 			<video ref={videoElement} className="video" onLoadedData={() => resizeCanvas()} autoPlay>
 				<source src={props.videoSrc} type="video/mp4"/>
 			</video>
-			<canvas ref={canvasElement} onMouseDown={(e) => mouseDown(e)} onMouseMove={(e) => mouseMove(e)} style={{width: canvasWidth+"px", height: canvasHeight+"px"}} className="canvas"/>
+			<canvas 
+				ref={canvasElement} 
+				onMouseDown={(e) => mouseDown(e)} 
+				onMouseMove={(e) => mouseMove(e)} 
+				width={canvasWidth+"px"} 
+				height={canvasHeight+"px"} 
+				className="canvas"/>
 		</div>
 	);
 }
