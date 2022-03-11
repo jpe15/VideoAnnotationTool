@@ -3,7 +3,6 @@
 	width: 800px;
 	height: 800px;
 	background-color: yellow;
-	z-index: -2;
 }
 
 .video {
@@ -16,12 +15,18 @@
 	max-height: 100%;
 }
 
-.canvas {
+.drawingCanvas {
 	position: absolute;
 	top: 0;
 	left: 0;
 	margin: 0;
-	z-index: -10;
-	background-color: green;
-	opacity: 0.8;
+	z-index: 10;
+}
+
+.displayCanvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	z-index: 9;
 }
