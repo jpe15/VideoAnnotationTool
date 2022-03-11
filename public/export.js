@@ -51,7 +51,7 @@ async function exportData(projName, data) {
         }
 
     } catch (err) {
-
+        
         console.error(err)
         return {
             value: -1,
@@ -62,4 +62,4 @@ async function exportData(projName, data) {
     }
 }
 
-  module.exports = exportData
+module.exports = exportData
