@@ -8,6 +8,11 @@ function CanvasComponent(props) {
 	// 0 == Box, 1 == Polygon, 2 == Freehand
 	const currentTool = 0;
 
+	// Stores if we are currently drawing a Polygon.
+	let drawingPolygon = false;
+	// Stores current points in polygon.
+	let currentPoints = [];
+
 	// Stores if we are currently drawing a bounding box
 	let drawingBox = false;
 	// Stores the initial coordinate of bounding box
@@ -29,6 +34,16 @@ function CanvasComponent(props) {
 	// We have two canvases, One for displaying all existing annotations and one for displaying the annotation currently being drawn.
 	const drawingCanvas = useRef(null);
 	const displayCanvas = useRef(null);
+
+	// Function to pause video.
+	const pauseVideo = () => {
+		videoElement.current.pause();
+	}
+
+	// Function to play video.
+	const playVideo = () => {
+		videoElement.current.play();
+	}
 
 	// Function that converts client( Relative to viewpoint ) coordinates to percentage of the video.
 	const coordsToPercent = (x, y) => {
@@ -78,18 +93,15 @@ function CanvasComponent(props) {
 
 	// Function that draws all annotations in array to display canvas.
 	const drawAnnotations = () => {
-		console.log("DRAWING.");
 		// Get context.
 		displayContext = displayCanvas.current.getContext('2d');
+		displayContext.strokeStyle = 'red';
 		// Clear display canvas.
 		displayContext.clearRect(0, 0, 
 			drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
 		// Go over each annotation
 		for(const annotation of annotations) {
-			console.log("ANNOTATION.");
-			console.log(annotation);
 			if(annotation.type == "BOX") {
-				console.log("BOX");
 				// Get the boxes bounds.
 				const [startX, startY] = percentToCanvasPixels(annotation.start[0], annotation.start[1]);
 				const [endX, endY] = percentToCanvasPixels(annotation.end[0], annotation.end[1]);
@@ -104,6 +116,7 @@ function CanvasComponent(props) {
 	const mouseDown = (e) => {
 		// NOTE: WHY DOES THIS NEED TO BE HERE??
 		currentContext = drawingCanvas.current.getContext('2d');	
+		currentContext.strokeStyle = 'green';
 		// Start drawing new box
 		drawingBox = true;
 		// Record starting X and Y
@@ -179,27 +192,31 @@ function CanvasComponent(props) {
 	}
 
 	return (
-		<div className="CanvasComponent">
-			<video ref={videoElement} className="video" onLoadedData={() => resizeCanvas()} autoPlay>
-				<source src={props.videoSrc} type="video/mp4"/>
-			</video>
-			<canvas 
-				ref={drawingCanvas} 
-				onMouseDown={(e) => mouseDown(e)} 
-				onMouseMove={(e) => mouseMove(e)} 
-				onMouseUp  ={(e) => mouseUp(e)}
-				width={canvasWidth+"px"} 
-				height={canvasHeight+"px"} 
-				className="drawingCanvas"/>
+		<div>
+			<div className="CanvasComponent">
+				<video ref={videoElement} className="video" onLoadedData={() => resizeCanvas()} autoPlay>
+					<source src={props.videoSrc} type="video/mp4"/>
+				</video>
+				<canvas 
+					ref={drawingCanvas} 
+					onMouseDown={(e) => mouseDown(e)} 
+					onMouseMove={(e) => mouseMove(e)} 
+					onMouseUp  ={(e) => mouseUp(e)}
+					width={canvasWidth+"px"} 
+					height={canvasHeight+"px"} 
+					className="drawingCanvas"/>
 
-			<canvas 
-				ref={displayCanvas} 
-				onMouseDown={(e) => mouseDown(e)} 
-				onMouseMove={(e) => mouseMove(e)} 
-				onMouseUp  ={(e) => mouseUp(e)}
-				width={canvasWidth+"px"} 
-				height={canvasHeight+"px"} 
-				className="displayCanvas"/>
+				<canvas 
+					ref={displayCanvas} 
+					onMouseDown={(e) => mouseDown(e)} 
+					onMouseMove={(e) => mouseMove(e)} 
+					onMouseUp  ={(e) => mouseUp(e)}
+					width={canvasWidth+"px"} 
+					height={canvasHeight+"px"} 
+					className="displayCanvas"/>
+			</div>
+			<button onClick={() => pauseVideo()}>Pause</button>
+			<button onClick={() => playVideo()}>Play</button>
 		</div>
 	);
 }
