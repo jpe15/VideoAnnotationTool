@@ -6,7 +6,7 @@ function CanvasComponent(props) {
 
 	// Stores which tool is currently being used.
 	// 0 == Box, 1 == Polygon, 2 == Freehand
-	const currentTool = 0;
+	let currentTool = 1;
 
 	// Stores if we are currently drawing a Polygon.
 	let drawingPolygon = false;
@@ -117,22 +117,56 @@ function CanvasComponent(props) {
 		// NOTE: WHY DOES THIS NEED TO BE HERE??
 		currentContext = drawingCanvas.current.getContext('2d');	
 		currentContext.strokeStyle = 'green';
-		// Start drawing new box
-		drawingBox = true;
-		// Record starting X and Y
+		currentContext.fillStyle = 'green';
+		// Get current location.
 		const clientX = e.clientX;
 		const clientY = e.clientY;
 		// Convert X and Y to percentage
 		const [xPercent, yPercent] = coordsToPercent(clientX, clientY);
-		// Store starting position
-		initialX = xPercent;
-		initialY = yPercent;
-		const [startX, startY] = percentToCanvasPixels(initialX, initialY);
+		// Check if we are meant to be drawing a bounding box.
+		if(currentTool == 0) {
+			// Start drawing new box
+			drawingBox = true;
+			// Store starting position
+			initialX = xPercent;
+			initialY = yPercent;
+			const [startX, startY] = percentToCanvasPixels(initialX, initialY);
+		}
+		// Check if we are meant to be drawing a polygon.
+		else if(currentTool == 1) {
+			// Convert the starting X Y percentages into coordinates for drawing.
+			const [startX, startY] = percentToCanvasPixels(xPercent, yPercent);
+			// Check if we are starting a new polygon.
+			if(drawingPolygon == false) {
+				// Set that we are starting a new polygon.
+				drawingPolygon = true;
+			}
+			// If we are already drawing a polygon join the last point to this one.
+			else {
+				// Get last point.
+				const lastPoint = currentPoints[currentPoints.length-1];
+				// Convert coords to canvas pixels.
+				const [lastX, lastY] = percentToCanvasPixels(lastPoint[0], lastPoint[1]);
+				// Draw line.
+				currentContext.beginPath();
+				currentContext.moveTo(lastX, lastY);
+				currentContext.lineTo(startX, startY);
+				currentContext.stroke();
+			}
+			// Draw first point in polygon.
+			currentContext.beginPath();
+			currentContext.arc(startX, startY, 5, 0, 2*Math.PI);
+			currentContext.stroke();
+			currentContext.fill();
+			// Add point to path.
+			currentPoints.push([xPercent, yPercent]);
+		}
 	}
 
 	const mouseMove = (e) => {
 		// Check if we are currently drawing a box
 		if(drawingBox) {
+			console.log("DRAWING BOX.");
 			// Get the current mouse position.
 			const clientX = e.clientX;
 			const clientY = e.clientY;
@@ -217,6 +251,8 @@ function CanvasComponent(props) {
 			</div>
 			<button onClick={() => pauseVideo()}>Pause</button>
 			<button onClick={() => playVideo()}>Play</button>
+			<button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
+			<button onClick={() => {currentTool = 1;}}>Draw polygon.</button>
 		</div>
 	);
 }
