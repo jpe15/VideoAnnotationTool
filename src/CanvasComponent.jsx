@@ -4,6 +4,10 @@ import "./styles/Canvas.css"
 
 function CanvasComponent(props) {
 
+	// At what radius to the beginning of a polygon to close it.
+	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
+	const polygonCloseRadius = 0.03;
+
 	// Stores which tool is currently being used.
 	// 0 == Box, 1 == Polygon, 2 == Freehand
 	let currentTool = 1;
@@ -96,6 +100,7 @@ function CanvasComponent(props) {
 		// Get context.
 		displayContext = displayCanvas.current.getContext('2d');
 		displayContext.strokeStyle = 'red';
+		displayContext.fillStyle = 'red';
 		// Clear display canvas.
 		displayContext.clearRect(0, 0, 
 			drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
@@ -109,7 +114,79 @@ function CanvasComponent(props) {
 				// Draw it on the display canvas.
 				displayContext.strokeRect(startX, startY, endX-startX, endY-startY);
 			}
+			if(annotation.type == "POLYGON") {
+				// Get the first point.
+				const [startX, startY] = percentToCanvasPixels(annotation.points[0][0], annotation.points[0][1]);
+				// Draw first point.
+				displayContext.beginPath();
+				displayContext.arc(startX, startY, 5, 0, 2*Math.PI);
+				displayContext.stroke();
+				displayContext.fill();
+				// Store last point coordinates.
+				let lastX, lastY;
+				lastX = startX;
+				lastY = startY;
+				for(const point of annotation.points.slice(1)) {
+					// Get coordinates of current point.
+					const [currentX, currentY] = percentToCanvasPixels(point[0], point[1]);
+					// Draw point.
+					displayContext.beginPath();
+					displayContext.arc(currentX, currentY, 5, 0, 2*Math.PI);
+					displayContext.stroke();
+					displayContext.fill();
+					// Join point to last point.
+					displayContext.beginPath();
+					displayContext.moveTo(lastX, lastY);
+					displayContext.lineTo(currentX, currentY);
+					displayContext.stroke();
+					// Update last coordinates.
+					lastX = currentX;
+					lastY = currentY;
+				}
+				// Close polygon.
+				displayContext.beginPath();
+				displayContext.moveTo(lastX, lastY);
+				displayContext.lineTo(startX, startY);
+				displayContext.stroke();
+			}
 		}
+	}
+
+	const closePolygon = () => {
+		currentContext = drawingCanvas.current.getContext('2d');
+		// Draw a line from the last point to the starting point.
+		// Get last point.
+		const lastPoint = currentPoints[currentPoints.length-1];
+		// Convert coords to canvas pixels.
+		const [lastX, lastY] = percentToCanvasPixels(lastPoint[0], lastPoint[1]);
+		// Get first point.
+		const firstPoint = currentPoints[0];
+		// Convert coords to canvas pixels.
+		const [startX, startY] = percentToCanvasPixels(firstPoint[0], firstPoint[1]);
+		// Draw line.
+		currentContext.beginPath();
+		currentContext.moveTo(lastX, lastY);
+		currentContext.lineTo(startX, startY);
+		currentContext.stroke();
+		// Add this to the list of annotations.
+		let newAnnotation = {}
+		newAnnotation["type"] = "POLYGON";
+		newAnnotation["points"] = currentPoints;
+
+		annotations.push(newAnnotation);
+
+		// We are no longer drawing.
+		drawingPolygon = false;
+
+		// Clear points array.
+		currentPoints = [];
+
+		// Clear drawing canvas.
+		currentContext.clearRect(0, 0, 
+			drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
+		
+		// Redraw display canvas.
+		drawAnnotations();
 	}
 
 	// Function that runs once mouse is clicked, Used for drawing annotations
@@ -143,6 +220,12 @@ function CanvasComponent(props) {
 			}
 			// If we are already drawing a polygon join the last point to this one.
 			else {
+				// Check if they have clicked near the starting point, If so close the polygon.
+				const distanceToBeginning = Math.sqrt((xPercent-currentPoints[0][0])**2 + (yPercent-currentPoints[0][1])**2);
+				if(distanceToBeginning <= polygonCloseRadius) {
+					closePolygon();
+					return;
+				}
 				// Get last point.
 				const lastPoint = currentPoints[currentPoints.length-1];
 				// Convert coords to canvas pixels.
@@ -209,7 +292,6 @@ function CanvasComponent(props) {
 			newAnnotation["type"] = "BOX";
 			newAnnotation["start"] = [initialX, initialY];
 			newAnnotation["end"] = [xPercent, yPercent];
-			newAnnotation["context"] = currentContext;
 
 			annotations.push(newAnnotation);
 
