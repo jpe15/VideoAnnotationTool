@@ -1,8 +1,8 @@
 import React from 'react';
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import "./styles/Canvas.css"
 
-function CanvasComponent(props) {
+function CanvasComponent({ videoSrc }) {
 
 	// At what radius to the beginning of a polygon to close it.
 	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
@@ -310,9 +310,9 @@ function CanvasComponent(props) {
 	return (
 		<div>
 			<div className="CanvasComponent">
-				<video ref={videoElement} className="video" onLoadedData={() => resizeCanvas()} autoPlay>
-					<source src={props.videoSrc} type="video/mp4"/>
-				</video>
+				{videoSrc && <video ref={videoElement} className="video" onLoadedData={() => resizeCanvas()} autoPlay>
+					<source src={videoSrc} type="video/mp4"/>
+				</video>}
 				<canvas 
 					ref={drawingCanvas} 
 					onMouseDown={(e) => mouseDown(e)} 
