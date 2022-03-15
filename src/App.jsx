@@ -2,8 +2,8 @@ import "./styles/App.css";
 import { useState, useRef, useEffect, createContext } from "react";
 import CanvasComponent from "./components/CanvasComponent.jsx";
 import AppContext from "./components/AppContext";
-import Export from "./components/Export";
-
+import Export from "./components/ExportButton";
+import TopBarButtons from "./components/TopBarButtons";
 
 function App() {
 	const [videoPath, setVideoPath] = useState("");
@@ -16,9 +16,13 @@ function App() {
 
 	return (
 		<AppContext>
-			<CanvasComponent videoSrc={videoPath}></CanvasComponent>
-			<button onClick={() => setVideoPath("C:\\Users\\nickd\\Videos\\Scrum4Group9.mp4")}>upload vid</button>
-			<Export projName={"test"}></Export>
+			<div style={{ position: "fixed", top: "0", left: "0", height: "100vh", width: "15vw", background: "red" }}>
+
+			</div>
+			<div className="app-main">
+				<TopBarButtons></TopBarButtons>
+				<CanvasComponent videoSrc={videoPath}></CanvasComponent>
+			</div>
 		</AppContext>
 	);
 }

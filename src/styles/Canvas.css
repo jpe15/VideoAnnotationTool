@@ -7,7 +7,8 @@ body {
 	position: relative;
 	width: 50vw;
 	height: 50vh;
-	background-color: yellow;
+	/* background-color: yellow; */
+	margin: 1em 5em 0 0em;
 }
 
 .video {

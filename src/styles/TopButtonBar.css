@@ -1,0 +1,17 @@
+.top-bar-button {
+	display: flex;
+	flex-direction: row;
+	gap: 5em;
+	padding: 1em 1em 5em;
+}
+
+.top-bar-button__load {
+	border: 0.5px solid grey;
+	background-color: #EEE;
+	padding-inline: 0.4em;
+}
+
+.top-bar-button__load--hidden {
+	position: absolute;
+	left: -1000em;
+}
