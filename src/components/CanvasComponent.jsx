@@ -1,8 +1,16 @@
 import React from 'react';
-import { useState, useRef, useEffect } from 'react'
-import "./styles/Canvas.css"
+import { useState, useRef, useEffect } from 'react';
+import "../styles/Canvas.css";
+import { useAnnotations } from './AppContext';
 
 function CanvasComponent({ videoSrc }) {
+
+	const [annotations, setAnnotations] = useAnnotations();
+
+	useEffect(() => {
+	  drawAnnotations();
+	}, [annotations])
+	
 
 	// At what radius to the beginning of a polygon to close it.
 	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
@@ -27,7 +35,7 @@ function CanvasComponent({ videoSrc }) {
 	// Stores the context for displaying existing annotations.
 	let displayContext;
 	// Stores all of the annotations
-	let annotations = [];
+	// let annotations = [];
 
 	// Create variables used to change canvas size.
 	const [canvasWidth, setCanvasWidth] = useState(0);
@@ -108,8 +116,8 @@ function CanvasComponent({ videoSrc }) {
 		for(const annotation of annotations) {
 			if(annotation.type == "BOX") {
 				// Get the boxes bounds.
-				const [startX, startY] = percentToCanvasPixels(annotation.start[0], annotation.start[1]);
-				const [endX, endY] = percentToCanvasPixels(annotation.end[0], annotation.end[1]);
+				const [startX, startY] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1]);
+				const [endX, endY] = percentToCanvasPixels(annotation["points"][3][0], annotation["points"][3][1]);
 				console.log(startX, startY, endX, endY);
 				// Draw it on the display canvas.
 				displayContext.strokeRect(startX, startY, endX-startX, endY-startY);
@@ -173,7 +181,8 @@ function CanvasComponent({ videoSrc }) {
 		newAnnotation["type"] = "POLYGON";
 		newAnnotation["points"] = currentPoints;
 
-		annotations.push(newAnnotation);
+		setAnnotations([...annotations, newAnnotation]);
+		// annotations.push(newAnnotation);
 
 		// We are no longer drawing.
 		drawingPolygon = false;
@@ -290,10 +299,14 @@ function CanvasComponent({ videoSrc }) {
 			// Add this to the list of annotations.
 			let newAnnotation = {}
 			newAnnotation["type"] = "BOX";
-			newAnnotation["start"] = [initialX, initialY];
-			newAnnotation["end"] = [xPercent, yPercent];
+			// newAnnotation["start"] = [initialX, initialY];
+			// newAnnotation["end"] = [xPercent, yPercent];
+			newAnnotation["points"] = [[initialX, initialY], [initialX + xPercent, initialY], [initialX, initialY + yPercent], [xPercent, yPercent]];
 
-			annotations.push(newAnnotation);
+			setAnnotations([...annotations, newAnnotation]);
+			// annotations.push(newAnnotation);
+
+			// NEVER CLEARS NEWANNOTATIONS
 
 			// We are no longer drawing.
 			drawingBox = false;

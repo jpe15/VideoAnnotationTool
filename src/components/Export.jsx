@@ -1,17 +1,19 @@
 // This is an example of how to export files, but will likely not be it's own component.
 
 import { useEffect, useState } from "react";
+import { useAnnotations } from "./AppContext";
 const electron = window.require('electron')
 
 // Takes props, but these may eventually be changed to global context values
-const Export = ({ projName, data }) => {
+const Export = ({ projName }) => {
     
     const [isExported, setIsExported] = useState(false)
+    const [annotations, ] = useAnnotations();
 
     const sendExport = () => {
         const args = {
             projName: projName,
-            data: data
+            data: annotations
         }
         
         electron.ipcRenderer.send('export', args)

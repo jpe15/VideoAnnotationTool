@@ -1,6 +1,8 @@
 import "./styles/App.css";
 import { useState, useRef, useEffect, createContext } from "react";
-import CanvasComponent from "./CanvasComponent.jsx";
+import CanvasComponent from "./components/CanvasComponent.jsx";
+import AppContext from "./components/AppContext";
+import Export from "./components/Export";
 
 
 function App() {
@@ -13,10 +15,11 @@ function App() {
 	}, []);
 
 	return (
-		<div>
+		<AppContext>
 			<CanvasComponent videoSrc={videoPath}></CanvasComponent>
 			<button onClick={() => setVideoPath("C:\\Users\\nickd\\Videos\\Scrum4Group9.mp4")}>upload vid</button>
-		</div>
+			<Export projName={"test"}></Export>
+		</AppContext>
 	);
 }
 
