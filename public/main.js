@@ -1,19 +1,24 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 
 const path = require('path')
 const isDev = require('electron-is-dev')
 
+const exportData = require('./export')
+
 require('@electron/remote/main').initialize()
+
+let win = null
 
 function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1920,
     height: 1080,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      contextIsolation: false
     }
   })
 
@@ -39,4 +44,16 @@ app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
+})
+
+// Receives communications from export button, through 'export' channel
+// args = { projName: string, data: object }
+ipcMain.on('export', (event, args) => {
+  exportData(args.projName, args.data)
+  .then(res => {
+    win.send('exported', res)
+  })
+  .catch(err => {
+    console.error(err)
+  })
 })
