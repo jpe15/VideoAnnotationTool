@@ -25,9 +25,9 @@ function uploadFile(){
 function Buttons(){
 	
   return <>
-<Button>new annotation</Button>
-<Button>Import existing annotation</Button>
-<Button onClick={uploadFile.bind(this)}>add video</Button>
+<Button onClick={uploadFile.bind(this)}>Add New Video</Button>
+<Button>Import Existing Annotation</Button>
+<Button>Export Annotations</Button>
 <input id ="selectFile"type={"file"} style={{display:"none"}}></input>
 </>
 }
