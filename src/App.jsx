@@ -4,6 +4,7 @@ import CanvasComponent from "./components/CanvasComponent.jsx";
 import AppContext from "./components/AppContext";
 import Export from "./components/ExportButton";
 import TopBarButtons from "./components/TopBarButtons";
+import TopButtons from "./components/TopButtons";
 
 function App() {
 	const [videoPath, setVideoPath] = useState("");
@@ -20,7 +21,7 @@ function App() {
 
 			</div>
 			<div className="app-main">
-				<TopBarButtons></TopBarButtons>
+				<TopButtons projName={"test"}></TopButtons>
 				<CanvasComponent videoSrc={videoPath}></CanvasComponent>
 			</div>
 		</AppContext>
