@@ -2,8 +2,6 @@ import "./styles/App.css";
 import { useState, useRef, useEffect, createContext } from "react";
 import CanvasComponent from "./components/CanvasComponent.jsx";
 import AppContext from "./components/AppContext";
-import Export from "./components/ExportButton";
-import TopBarButtons from "./components/TopBarButtons";
 import TopButtons from "./components/TopButtons";
 
 function App() {
