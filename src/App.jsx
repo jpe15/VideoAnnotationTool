@@ -16,7 +16,7 @@ function App() {
 
 	return (
 		<AppContext>
-			<div style={{ position: "fixed", top: "0", left: "0", height: "100vh", width: "15vw", background: "red" }}>
+			<div style={{ position: "fixed", top: "0", left: "0", height: "100vh", width: "15vw", background: "black" }}>
 
 			</div>
 			<div className="app-main">
