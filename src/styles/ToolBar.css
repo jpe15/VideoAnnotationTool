@@ -1,0 +1,36 @@
+.tool-bar {
+	background-color: black;
+	padding: 3em 0.5em;
+	gap: 3em;
+	display: flex;
+	flex-direction: column;
+	min-width: fit-content;
+	justify-content: center;
+	max-height: 20em;
+	border-radius: 10em;
+	max-width: fit-content;
+	box-shadow: 0.2em 0.2em 0.2em rgb(63, 63, 63);
+	margin: auto;
+}
+
+.tool-bar__button {
+	border: none;
+	border: 3px solid black;
+	padding: 1em;
+	box-shadow: none;
+	background-color: black;
+	
+}
+
+.tool-bar__button--active {
+	border: 3px solid white;
+	border-radius: 1em;
+	padding: 1em;
+	box-shadow: none;
+	background-color: black;
+}
+
+.tool-bar__icons {
+	color: white;
+	background-color: black;
+}
