@@ -15,8 +15,7 @@ function App() {
 
 	return (
 		<AppContext>
-			<div style={{ position: "fixed", top: "0", left: "0", height: "100vh", width: "15vw", background: "black" }}>
-
+			// <div style={{ position: "fixed", top: "0", left: "0", height: "100vh", width: "15vw", background: "black", borderRadius: "70"}}>
 			</div>
 			<div className="app-main">
 				<TopButtons projName={"test"}></TopButtons>

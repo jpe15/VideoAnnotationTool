@@ -184,6 +184,8 @@ const CanvasComponent = () => {
 		newAnnotation["type"] = "POLYGON";
 		newAnnotation["points"] = currentPoints;
 
+		let updateAnnotation = annotations; //update annotations as they are typed in
+
 		setAnnotations([...annotations, newAnnotation]);
 		// annotations.push(newAnnotation);
 
