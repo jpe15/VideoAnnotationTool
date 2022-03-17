@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import "../styles/Canvas.css";
 import { useAnnotations, useTool, useVideoPath } from "./AppContext";
 import ToolBar from "./ToolBar";
+import AnnotationsBar from "./AnnotationsBar";
 
 const CanvasComponent = () => {
 	const [annotations, setAnnotations] = useAnnotations();
