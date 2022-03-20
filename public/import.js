@@ -1,20 +1,15 @@
-import React from 'react'
-import Data from './data.json' //this comes from the user.
-export const importannoation = () => {
-  return (
-    <div>importannoation
-        <div className="posts">
-            {Data.map(post=>{
-                return (
-                    <>
-                    <h4>{post.name}</h4>
-                    <p>{"post.videopath"}</p>
-                    <p>{"post.imagepath"}</p>
-                    </>
-                )
-            })
-        }
-        </div>
-    </div>
-  )
-}
+"use strict";
+
+fetch('./data.json')
+.then(function(resp){
+    return resp.json()
+})
+.then(function importannoataions(data){
+    console.log(data.metadata.name)
+    console.log(data.metadata.videopath)
+    console.log(data.metadata.imagepath)
+    console.log(data.annotations)
+})
+export default importannoataions
+    
+
