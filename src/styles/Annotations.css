@@ -1,0 +1,9 @@
+.blackBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 15vw;
+    background-color: black;
+    border-radius: 70%;
+}
