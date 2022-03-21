@@ -1,5 +1,5 @@
 "use strict";
-
+function importannoataions(filePath){
 fetch('./data.json')
 .then(function(resp){
     return resp.json()
@@ -10,6 +10,7 @@ fetch('./data.json')
     console.log(data.metadata.imagepath)
     console.log(data.annotations)
 })
-export default importannoataions
+}
+module.exports= importannoataions;
     
 
