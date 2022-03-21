@@ -43,8 +43,8 @@ const TopButtons = ({ projName }) => {
 
 	return (
 		<div>
-			<Button onClick={uploadFile.bind(this)}>Add New Video</Button>
-			<Button>Import Existing Annotation</Button>
+			<Button onClick={uploadFile.bind(this)}>Create New Project</Button>
+			<Button>Import Existing Project</Button>
 			<Button onClick={sendExport}>Export Annotations</Button>
 			<input id="selectFile" type={"file"} style={{ display: "none" }} onChange={(e) => {setVideoPath(e.target.files[0].path);}}></input>
 		</div>
