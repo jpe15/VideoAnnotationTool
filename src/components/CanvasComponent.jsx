@@ -52,6 +52,11 @@ const CanvasComponent = () => {
 	const drawingCanvas = useRef(null);
 	const displayCanvas = useRef(null);
 
+	// Function to change playback rate.
+	const playbackRate = (speed) => {
+		videoElement.current.playbackRate = speed;
+	}
+
 	// Function to advance video to next frame. NOTE: We just assume the video is playing at 24fps. This mightn't be true.
 	const nextFrame = () => {
 		const timePerFrame = 1/24.0;
@@ -379,6 +384,10 @@ const CanvasComponent = () => {
 				<button onClick={() => playVideo()}>Play</button>
 				<button onClick={() => nextFrame()}>Next Frame</button>
 				<button onClick={() => previousFrame()}>Previous Frame</button>
+				<button onClick={() => playbackRate(0.5)}>0.5X</button>
+				<button onClick={() => playbackRate(1)}>1X</button>
+				<button onClick={() => playbackRate(2)}>2X</button>
+				<button onClick={() => playbackRate(4)}>4X</button>
 			</div>
 			<ToolBar></ToolBar>
 			{/* <button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
