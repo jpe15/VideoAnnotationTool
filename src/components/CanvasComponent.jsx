@@ -60,6 +60,12 @@ const CanvasComponent = () => {
 	// Function to play video.
 	const playVideo = () => {
 		videoElement.current.play();
+		// Clear drawing canvas.
+		currentContext = drawingCanvas.current.getContext("2d");
+		currentContext.clearRect(0, 0, drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
+		// Clear display canvas.
+		displayContext = displayCanvas.current.getContext("2d");
+		displayContext.clearRect(0, 0, displayCanvas.current.getBoundingClientRect().width, displayCanvas.current.getBoundingClientRect().height);
 	};
 
 	// Function that converts client( Relative to viewpoint ) coordinates to percentage of the video.
@@ -117,6 +123,9 @@ const CanvasComponent = () => {
 		displayContext.clearRect(0, 0, drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
 		// Go over each annotation
 		for (const annotation of annotations) {
+			if (annotation.timestamp != videoElement.current.currentTime) {
+				continue;
+			}
 			if (annotation.type == "BOX") {
 				// Get the boxes bounds.
 				const [startX, startY] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1]);
@@ -183,6 +192,7 @@ const CanvasComponent = () => {
 		let newAnnotation = {};
 		newAnnotation["type"] = "POLYGON";
 		newAnnotation["points"] = currentPoints;
+		newAnnotation["timestamp"] = videoElement.current.currentTime;
 
 		setAnnotations([...annotations, newAnnotation]);
 		// annotations.push(newAnnotation);
@@ -307,6 +317,7 @@ const CanvasComponent = () => {
 				[initialX, initialY + yPercent],
 				[xPercent, yPercent],
 			];
+			newAnnotation["timestamp"] = videoElement.current.currentTime;
 
 			setAnnotations([...annotations, newAnnotation]);
 			// annotations.push(newAnnotation);
@@ -329,7 +340,7 @@ const CanvasComponent = () => {
 			<div>
 				<div className="CanvasComponent">
 					{videoSrc && (
-						<video ref={videoElement} src={videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4">
+						<video ref={videoElement} src={"file://"+videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4">
 						</video>
 					)}
 					{videoSrc && <canvas
