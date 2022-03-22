@@ -52,6 +52,12 @@ const CanvasComponent = () => {
 	const drawingCanvas = useRef(null);
 	const displayCanvas = useRef(null);
 
+	// Function to seek to a specific time stamp
+	const gotoTime = (time) => {
+		videoElement.current.currentTime = time;
+		drawAnnotations();
+	}
+
 	// Function to change playback rate.
 	const playbackRate = (speed) => {
 		videoElement.current.playbackRate = speed;
@@ -388,6 +394,10 @@ const CanvasComponent = () => {
 				<button onClick={() => playbackRate(1)}>1X</button>
 				<button onClick={() => playbackRate(2)}>2X</button>
 				<button onClick={() => playbackRate(4)}>4X</button>
+				<br/>
+				<p>NOTE: We wont show this control to the end user, Just for testing the goto function.</p>
+				<input onChange={(event) => {gotoTime(event.target.value)}}></input>
+
 			</div>
 			<ToolBar></ToolBar>
 			{/* <button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
