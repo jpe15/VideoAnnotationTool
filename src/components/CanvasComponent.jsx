@@ -52,6 +52,12 @@ const CanvasComponent = () => {
 	const drawingCanvas = useRef(null);
 	const displayCanvas = useRef(null);
 
+	// Function to advance video to next frame. NOTE: We just assume the video is playing at 24fps. This mightn't be true.
+	const nextFrame = () => {
+		const timePerFrame = 1/24.0;
+		videoElement.current.currentTime += timePerFrame;
+	}
+
 	// Function to pause video.
 	const pauseVideo = () => {
 		videoElement.current.pause();
@@ -365,6 +371,7 @@ const CanvasComponent = () => {
 				</div>
 				<button onClick={() => pauseVideo()}>Pause</button>
 				<button onClick={() => playVideo()}>Play</button>
+				<button onClick={() => nextFrame()}>Next Frame</button>
 			</div>
 			<ToolBar></ToolBar>
 			{/* <button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
