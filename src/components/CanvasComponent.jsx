@@ -1,10 +1,11 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import "../styles/Canvas.css";
-import { useAnnotations, useTool, useVideoPath } from "./AppContext";
+import { useAnnotations, useTool, useVideoPath, useScreenshots } from "./AppContext";
 import ToolBar from "./ToolBar";
 
 const CanvasComponent = () => {
+	const [screenshots, setScreenshots] = useScreenshots();
 	const [annotations, setAnnotations] = useAnnotations();
 	const [tool] = useTool();
 	const [videoSrc] = useVideoPath();
@@ -39,8 +40,6 @@ const CanvasComponent = () => {
 
 	// Stores the context for displaying existing annotations.
 	let displayContext;
-	// Stores all of the annotations
-	// let annotations = [];
 
 	// Create variables used to change canvas size.
 	const [canvasWidth, setCanvasWidth] = useState(0);
@@ -51,6 +50,17 @@ const CanvasComponent = () => {
 	// We have two canvases, One for displaying all existing annotations and one for displaying the annotation currently being drawn.
 	const drawingCanvas = useRef(null);
 	const displayCanvas = useRef(null);
+
+	// We have an additional invisible canvas for saving screenshots.
+	const screenshotCanvas = useRef(null);
+
+	// Function to save screenshot of current frame.
+	const saveScreenshot = () => {
+		const screenshotContext = screenshotCanvas.current.getContext("2d");
+		screenshotContext.drawImage(videoElement.current, 0, 0, canvasWidth, canvasHeight);
+		const imgData = screenshotCanvas.current.toDataURL('image/jpg');
+		return imgData;
+	}
 
 	// Function to seek to a specific time stamp
 	const gotoTime = (time) => {
@@ -218,7 +228,13 @@ const CanvasComponent = () => {
 		newAnnotation["timestamp"] = videoElement.current.currentTime;
 
 		setAnnotations([...annotations, newAnnotation]);
-		// annotations.push(newAnnotation);
+		
+		// Check if we already have a screenshot of this frame.
+		if(!(videoElement.current.currentTime in screenshots)) {
+			// If we don't then take one.
+			const screenshot = saveScreenshot();
+			screenshots[videoElement.current.currentTime] = screenshot;
+		}
 
 		// We are no longer drawing.
 		drawingPolygon = false;
@@ -343,7 +359,13 @@ const CanvasComponent = () => {
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
 
 			setAnnotations([...annotations, newAnnotation]);
-			// annotations.push(newAnnotation);
+
+			// Check if we already have a screenshot of this frame.
+			if(!(videoElement.current.currentTime in screenshots)) {
+				// If we don't then take one.
+				const screenshot = saveScreenshot();
+				screenshots[videoElement.current.currentTime] = screenshot;
+			}
 
 			// NEVER CLEARS NEWANNOTATIONS
 
@@ -366,6 +388,14 @@ const CanvasComponent = () => {
 						<video ref={videoElement} src={"file://"+videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4">
 						</video>
 					)}
+
+					{videoSrc && <canvas 
+						ref={screenshotCanvas} 
+						width={canvasWidth + "px"}
+						height={canvasHeight + "px"}
+						className="screenshotCanvas"
+					/>}
+
 					{videoSrc && <canvas
 						ref={drawingCanvas}
 						onMouseDown={(e) => mouseDown(e)}
