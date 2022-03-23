@@ -38,3 +38,12 @@ body {
 	margin: 0;
 	z-index: 9;
 }
+
+.screenshotCanvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	z-index: -9;
+	opacity: 0;
+}
