@@ -1,10 +1,11 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import "../styles/Canvas.css";
-import { useAnnotations, useTool, useVideoPath } from "./AppContext";
+import { useAnnotations, useTool, useVideoPath, useScreenshots } from "./AppContext";
 import ToolBar from "./ToolBar";
 
 const CanvasComponent = () => {
+	const [screenshots, setScreenshots] = useScreenshots();
 	const [annotations, setAnnotations] = useAnnotations();
 	const [tool] = useTool();
 	const [videoSrc] = useVideoPath();
@@ -39,8 +40,6 @@ const CanvasComponent = () => {
 
 	// Stores the context for displaying existing annotations.
 	let displayContext;
-	// Stores all of the annotations
-	// let annotations = [];
 
 	// Create variables used to change canvas size.
 	const [canvasWidth, setCanvasWidth] = useState(0);
@@ -52,6 +51,40 @@ const CanvasComponent = () => {
 	const drawingCanvas = useRef(null);
 	const displayCanvas = useRef(null);
 
+	// We have an additional invisible canvas for saving screenshots.
+	const screenshotCanvas = useRef(null);
+
+	// Function to save screenshot of current frame.
+	const saveScreenshot = () => {
+		const screenshotContext = screenshotCanvas.current.getContext("2d");
+		screenshotContext.drawImage(videoElement.current, 0, 0, canvasWidth, canvasHeight);
+		const imgData = screenshotCanvas.current.toDataURL('image/jpg');
+		return imgData;
+	}
+
+	// Function to seek to a specific time stamp
+	const gotoTime = (time) => {
+		videoElement.current.currentTime = time;
+		drawAnnotations();
+	}
+
+	// Function to change playback rate.
+	const playbackRate = (speed) => {
+		videoElement.current.playbackRate = speed;
+	}
+
+	// Function to advance video to next frame. NOTE: We just assume the video is playing at 24fps. This mightn't be true.
+	const nextFrame = () => {
+		const timePerFrame = 1/24.0;
+		videoElement.current.currentTime += timePerFrame;
+	}
+
+	// Function to move video to previous frame. NOTE: We just assume the video is playing at 24fps. This mightn't be true.
+	const previousFrame = () => {
+		const timePerFrame = 1/24.0;
+		videoElement.current.currentTime -= timePerFrame;
+	}
+
 	// Function to pause video.
 	const pauseVideo = () => {
 		videoElement.current.pause();
@@ -60,6 +93,12 @@ const CanvasComponent = () => {
 	// Function to play video.
 	const playVideo = () => {
 		videoElement.current.play();
+		// Clear drawing canvas.
+		currentContext = drawingCanvas.current.getContext("2d");
+		currentContext.clearRect(0, 0, drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
+		// Clear display canvas.
+		displayContext = displayCanvas.current.getContext("2d");
+		displayContext.clearRect(0, 0, displayCanvas.current.getBoundingClientRect().width, displayCanvas.current.getBoundingClientRect().height);
 	};
 
 	// Function that converts client( Relative to viewpoint ) coordinates to percentage of the video.
@@ -117,6 +156,9 @@ const CanvasComponent = () => {
 		displayContext.clearRect(0, 0, drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
 		// Go over each annotation
 		for (const annotation of annotations) {
+			if (annotation.timestamp != videoElement.current.currentTime) {
+				continue;
+			}
 			if (annotation.type == "BOX") {
 				// Get the boxes bounds.
 				const [startX, startY] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1]);
@@ -183,9 +225,16 @@ const CanvasComponent = () => {
 		let newAnnotation = {};
 		newAnnotation["type"] = "POLYGON";
 		newAnnotation["points"] = currentPoints;
+		newAnnotation["timestamp"] = videoElement.current.currentTime;
 
 		setAnnotations([...annotations, newAnnotation]);
-		// annotations.push(newAnnotation);
+		
+		// Check if we already have a screenshot of this frame.
+		if(!(videoElement.current.currentTime in screenshots)) {
+			// If we don't then take one.
+			const screenshot = saveScreenshot();
+			screenshots[videoElement.current.currentTime] = screenshot;
+		}
 
 		// We are no longer drawing.
 		drawingPolygon = false;
@@ -307,9 +356,16 @@ const CanvasComponent = () => {
 				[initialX, initialY + yPercent],
 				[xPercent, yPercent],
 			];
+			newAnnotation["timestamp"] = videoElement.current.currentTime;
 
 			setAnnotations([...annotations, newAnnotation]);
-			// annotations.push(newAnnotation);
+
+			// Check if we already have a screenshot of this frame.
+			if(!(videoElement.current.currentTime in screenshots)) {
+				// If we don't then take one.
+				const screenshot = saveScreenshot();
+				screenshots[videoElement.current.currentTime] = screenshot;
+			}
 
 			// NEVER CLEARS NEWANNOTATIONS
 
@@ -329,9 +385,17 @@ const CanvasComponent = () => {
 			<div>
 				<div className="CanvasComponent">
 					{videoSrc && (
-						<video ref={videoElement} src={videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4">
+						<video ref={videoElement} src={"file://"+videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4">
 						</video>
 					)}
+
+					{videoSrc && <canvas 
+						ref={screenshotCanvas} 
+						width={canvasWidth + "px"}
+						height={canvasHeight + "px"}
+						className="screenshotCanvas"
+					/>}
+
 					{videoSrc && <canvas
 						ref={drawingCanvas}
 						onMouseDown={(e) => mouseDown(e)}
@@ -354,6 +418,16 @@ const CanvasComponent = () => {
 				</div>
 				<button onClick={() => pauseVideo()}>Pause</button>
 				<button onClick={() => playVideo()}>Play</button>
+				<button onClick={() => nextFrame()}>Next Frame</button>
+				<button onClick={() => previousFrame()}>Previous Frame</button>
+				<button onClick={() => playbackRate(0.5)}>0.5X</button>
+				<button onClick={() => playbackRate(1)}>1X</button>
+				<button onClick={() => playbackRate(2)}>2X</button>
+				<button onClick={() => playbackRate(4)}>4X</button>
+				<br/>
+				<p>NOTE: We wont show this control to the end user, Just for testing the goto function.</p>
+				<input onChange={(event) => {gotoTime(event.target.value)}}></input>
+
 			</div>
 			<ToolBar></ToolBar>
 			{/* <button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
