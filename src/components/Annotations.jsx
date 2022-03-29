@@ -23,12 +23,12 @@ return (
 
 
     <div class = "card">
-        <h3 style = {{color: "black"}}>
-            Label: < input type = "text"   placeholder="Enter label" value = {annotation?.label} onChange = {(e) => updateLabel(e.target.value)}/> </h3>
-        <h3 style = {{color: "black"}}>Type: {annotation?.type}</h3>
-        <p style = {{color: "black"}}>
+        <h4 style = {{color: "black"}}>
+            Label: < input type = "text"   placeholder="Enter label" value = {annotation?.label} onChange = {(e) => updateLabel(e.target.value)}/> </h4>
+        <h4 style = {{color: "black"}}>Type: {annotation?.type}</h4>
+        <h4 style = {{color: "black"}}>
         Comment: <input type = "text"  placeholder="Enter comment" value = {annotation?.comment} onChange = {(e) => updateComment(e.target.value)}/>
-        </p>
+        </h4>
         {/* <p style = {{color: "white"}}> */}
             {/* {annotation?.points.map((point) => { */}
                  {/* return <p style = {{color: "white"}} > {point}</p>; */}

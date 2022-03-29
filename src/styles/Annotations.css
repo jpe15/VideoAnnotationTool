@@ -5,6 +5,7 @@
     height: 100vh;
     width: 15vw;
     background-color: rgb(237, 184, 248);
+    overflow: auto;
 }
 
   input[type="text"], textarea {
