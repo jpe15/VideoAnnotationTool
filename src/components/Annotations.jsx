@@ -20,11 +20,13 @@ const updateComment =  (comment) => {
 }
     //updateComment
 return (
-    <div>
-        <h3 style = {{color: "white"}}>
+
+
+    <div class = "card">
+        <h3 style = {{color: "black"}}>
             Label: < input type = "text"   placeholder="Enter label" value = {annotation?.label} onChange = {(e) => updateLabel(e.target.value)}/> </h3>
-        <h3 style = {{color: "white"}}>Type: {annotation?.type}</h3>
-        <p style = {{color: "white"}}>
+        <h3 style = {{color: "black"}}>Type: {annotation?.type}</h3>
+        <p style = {{color: "black"}}>
         Comment: <input type = "text"  placeholder="Enter comment" value = {annotation?.comment} onChange = {(e) => updateComment(e.target.value)}/>
         </p>
         {/* <p style = {{color: "white"}}> */}
