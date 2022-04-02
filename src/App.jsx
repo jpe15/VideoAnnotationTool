@@ -5,7 +5,6 @@ import AppContext from "./components/AppContext";
 import TopButtons from "./components/TopButtons";
 import AnnotationsBar from "./components/AnnotationsBar";
 
-
 function App() {
 	const [videoPath, setVideoPath] = useState("");
 	const [annotations, setAnnotations] = useState([]);
@@ -17,7 +16,7 @@ function App() {
 
 	return (
 		<AppContext>
-			 <div>
+			<div>
 				 <AnnotationsBar></AnnotationsBar>
 			</div>
 			<div className="app-main">
