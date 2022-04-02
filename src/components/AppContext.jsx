@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
+import Modal from "react-modal";
+import StartUpModal from "./StartUpModal";
 import "../styles/App.css";
 
 export const AnnotationsContext = createContext();
@@ -17,7 +19,7 @@ export const useScreenshots = () => {
 	const screenshots = useContext(ScreenshotsContext);
 	const setScreenshots = useContext(UpdateScreenshotsContext);
 	return [screenshots, setScreenshots];
-}
+};
 
 export const useAnnotations = () => {
 	const annotations = useContext(AnnotationsContext);
@@ -49,6 +51,7 @@ const AppContext = ({ children }) => {
 					<UpdateToolContext.Provider value={setTool}>
 						<VideoPathContext.Provider value={videoPath}>
 							<UpdateVideoPathContext.Provider value={setVideoPath}>
+								<StartUpModal isOpen={true}/>
 								<div className="container">{children}</div>
 							</UpdateVideoPathContext.Provider>
 						</VideoPathContext.Provider>

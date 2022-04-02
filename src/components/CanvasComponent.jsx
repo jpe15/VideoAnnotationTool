@@ -235,7 +235,9 @@ const CanvasComponent = () => {
 		if (!(videoElement.current.currentTime in screenshots)) {
 			// If we don't then take one.
 			const screenshot = saveScreenshot();
-			screenshots[videoElement.current.currentTime] = screenshot;
+			let oldScreenshots = screenshots;
+			oldScreenshots[videoElement.current.currentTime] = screenshot;
+			setScreenshots(oldScreenshots);
 		}
 
 		// We are no longer drawing.
@@ -367,7 +369,9 @@ const CanvasComponent = () => {
 			if (!(videoElement.current.currentTime in screenshots)) {
 				// If we don't then take one.
 				const screenshot = saveScreenshot();
-				screenshots[videoElement.current.currentTime] = screenshot;
+				let oldScreenshots = screenshots;
+				oldScreenshots[videoElement.current.currentTime] = screenshot;
+				setScreenshots(oldScreenshots);
 			}
 
 			// NEVER CLEARS NEWANNOTATIONS

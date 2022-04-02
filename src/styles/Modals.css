@@ -1,0 +1,45 @@
+.modal__title {
+	padding-left: 0.5rem;
+	font-size: 1.25rem;
+	font-weight: 900;
+	width: 100%;
+	background-color: #c1c7cd;
+	height: 2em;
+	text-transform: uppercase;
+	color: black;
+	font-family: Roboto, sans-serif;
+	padding: 0;
+	margin: 0;
+}
+
+.modal__body {
+	padding: 0;
+	margin-top: 15%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	gap: 0.5em;
+	overflow: hidden;
+}
+
+.modal__body > button {
+	background-color: #0f62fe;
+	font-size: 1.25rem;
+	color: white;
+	padding: 5px 15px;
+	border: none;
+	text-align: left;
+	height: 60px;
+	width: fit-content;
+	min-width: 15rem;
+	white-space: nowrap;
+	height: 4rem;
+	cursor: pointer;
+	outline: 0;
+	transition: ease background-color 250ms;
+	
+}
+
+.modal__body > button:hover {
+	background-color: #283593;
+}
