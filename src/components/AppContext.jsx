@@ -1,8 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import "../styles/AppContext.css";
-
-export const ScreenshotsContext = createContext();
-export const UpdateScreenshotsContext = createContext();
+import "../styles/App.css";
 
 export const AnnotationsContext = createContext();
 export const UpdateAnnotationsContext = createContext();
@@ -12,6 +9,9 @@ export const UpdateToolContext = createContext();
 
 export const VideoPathContext = createContext();
 export const UpdateVideoPathContext = createContext();
+
+export const ScreenshotsContext = createContext();
+export const UpdateScreenshotsContext = createContext();
 
 export const useScreenshots = () => {
 	const screenshots = useContext(ScreenshotsContext);
@@ -39,30 +39,23 @@ export const useVideoPath = () => {
 
 const AppContext = ({ children }) => {
 	const [annotations, setAnnotations] = useState([]);
-	const [screenshots, setScreenshots] = useState({});
 	const [tool, setTool] = useState(1);
 	const [videoPath, setVideoPath] = useState("");
 
 	return (
-		<div className="app-context">
-			<ScreenshotsContext.Provider value={screenshots}>
-				<UpdateScreenshotsContext.Provider value={setScreenshots}>
-					<AnnotationsContext.Provider value={annotations}>
-						<UpdateAnnotationsContext.Provider value={setAnnotations}>
-							<ToolContext.Provider value={tool}>
-								<UpdateToolContext.Provider value={setTool}>
-									<VideoPathContext.Provider value={videoPath}>
-										<UpdateVideoPathContext.Provider value={setVideoPath}>
-											{children}
-										</UpdateVideoPathContext.Provider>
-									</VideoPathContext.Provider>
-								</UpdateToolContext.Provider>
-							</ToolContext.Provider>
-						</UpdateAnnotationsContext.Provider>
-					</AnnotationsContext.Provider>
-				</UpdateScreenshotsContext.Provider>
-			</ScreenshotsContext.Provider>
-		</div>
+		<AnnotationsContext.Provider value={annotations}>
+			<UpdateAnnotationsContext.Provider value={setAnnotations}>
+				<ToolContext.Provider value={tool}>
+					<UpdateToolContext.Provider value={setTool}>
+						<VideoPathContext.Provider value={videoPath}>
+							<UpdateVideoPathContext.Provider value={setVideoPath}>
+								<div className="container">{children}</div>
+							</UpdateVideoPathContext.Provider>
+						</VideoPathContext.Provider>
+					</UpdateToolContext.Provider>
+				</ToolContext.Provider>
+			</UpdateAnnotationsContext.Provider>
+		</AnnotationsContext.Provider>
 	);
 };
 

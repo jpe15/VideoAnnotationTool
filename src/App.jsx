@@ -16,13 +16,16 @@ function App() {
 
 	return (
 		<AppContext>
-			<div>
-				 <AnnotationsBar></AnnotationsBar>
+			{/* <div>
+				 
 			</div>
-			<div className="app-main">
-				<TopButtons projName={"test"}></TopButtons>
-				<CanvasComponent videoSrc={videoPath}></CanvasComponent>
-			</div>
+			<div classNameName="app-main">
+				
+				
+			</div> */}
+			<div className="Top-Buttons"><TopButtons projName={"test"}></TopButtons></div>
+			<div className="Annotations"><AnnotationsBar></AnnotationsBar></div>
+			<div className="Canvas-Component"><CanvasComponent videoSrc={videoPath}></CanvasComponent></div>
 		</AppContext>
 	);
 }
