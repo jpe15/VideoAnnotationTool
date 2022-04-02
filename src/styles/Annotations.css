@@ -1,0 +1,33 @@
+.blackBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 15vw;
+    background-color: rgb(237, 184, 248);
+    overflow: scroll;
+}
+
+  input[type="text"], textarea {
+
+    background-color : rgb(180, 248, 201); 
+    border: rgb(180, 248, 201);
+    outline: none;
+  
+  }
+
+  .card {
+    box-shadow: 0 7px 12px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 98%;
+    background-color : rgb(180, 248, 201); 
+    border-radius: 7px;
+  }
+  
+  .card:hover {
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.2);
+  }
+  
+  .container {
+    padding: 20vh 15vw;
+  }

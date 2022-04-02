@@ -84,7 +84,7 @@ const CanvasComponent = () => {
 		const timePerFrame = 1/24.0;
 		videoElement.current.currentTime -= timePerFrame;
 	}
-
+  
 	// Function to pause video.
 	const pauseVideo = () => {
 		videoElement.current.pause();
@@ -356,6 +356,7 @@ const CanvasComponent = () => {
 				[initialX, initialY + yPercent],
 				[xPercent, yPercent],
 			];
+
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
 
 			setAnnotations([...annotations, newAnnotation]);
@@ -385,6 +386,7 @@ const CanvasComponent = () => {
 			<div>
 				<div className="CanvasComponent">
 					{videoSrc && (
+
 						<video ref={videoElement} src={"file://"+videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4">
 						</video>
 					)}

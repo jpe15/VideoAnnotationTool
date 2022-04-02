@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, createContext } from "react";
 import CanvasComponent from "./components/CanvasComponent.jsx";
 import AppContext from "./components/AppContext";
 import TopButtons from "./components/TopButtons";
+import AnnotationsBar from "./components/AnnotationsBar";
 
 function App() {
 	const [videoPath, setVideoPath] = useState("");
@@ -15,8 +16,8 @@ function App() {
 
 	return (
 		<AppContext>
-			<div style={{ position: "fixed", top: "0", left: "0", height: "100vh", width: "15vw", background: "black" }}>
-
+			<div>
+				 <AnnotationsBar></AnnotationsBar>
 			</div>
 			<div className="app-main">
 				<TopButtons projName={"test"}></TopButtons>
