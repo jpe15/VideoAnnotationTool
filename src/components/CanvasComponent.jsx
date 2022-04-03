@@ -16,8 +16,6 @@ const CanvasComponent = () => {
 		}
 	}, [annotations]);
 
-	useEffect(() => {console.log(videoSrc);}, [videoSrc]);
-
 	// At what radius to the beginning of a polygon to close it.
 	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
 	const polygonCloseRadius = 0.03;
@@ -58,33 +56,33 @@ const CanvasComponent = () => {
 	const saveScreenshot = () => {
 		const screenshotContext = screenshotCanvas.current.getContext("2d");
 		screenshotContext.drawImage(videoElement.current, 0, 0, canvasWidth, canvasHeight);
-		const imgData = screenshotCanvas.current.toDataURL('image/jpg');
+		const imgData = screenshotCanvas.current.toDataURL("image/jpg");
 		return imgData;
-	}
+	};
 
 	// Function to seek to a specific time stamp
 	const gotoTime = (time) => {
 		videoElement.current.currentTime = time;
 		drawAnnotations();
-	}
+	};
 
 	// Function to change playback rate.
 	const playbackRate = (speed) => {
 		videoElement.current.playbackRate = speed;
-	}
+	};
 
 	// Function to advance video to next frame. NOTE: We just assume the video is playing at 24fps. This mightn't be true.
 	const nextFrame = () => {
-		const timePerFrame = 1/24.0;
+		const timePerFrame = 1 / 24.0;
 		videoElement.current.currentTime += timePerFrame;
-	}
+	};
 
 	// Function to move video to previous frame. NOTE: We just assume the video is playing at 24fps. This mightn't be true.
 	const previousFrame = () => {
-		const timePerFrame = 1/24.0;
+		const timePerFrame = 1 / 24.0;
 		videoElement.current.currentTime -= timePerFrame;
-	}
-  
+	};
+
 	// Function to pause video.
 	const pauseVideo = () => {
 		videoElement.current.pause();
@@ -136,6 +134,9 @@ const CanvasComponent = () => {
 		// Get video dimensions.
 		const width = videoElement.current.getBoundingClientRect().width;
 		const height = videoElement.current.getBoundingClientRect().height;
+		const comp = document.getElementById("canvas-component");
+		comp.style.width = width + "px";
+		comp.style.height = height + "px";
 
 		// Resize canvas.
 		setCanvasWidth(width);
@@ -226,14 +227,17 @@ const CanvasComponent = () => {
 		newAnnotation["type"] = "POLYGON";
 		newAnnotation["points"] = currentPoints;
 		newAnnotation["timestamp"] = videoElement.current.currentTime;
+		newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
 
 		setAnnotations([...annotations, newAnnotation]);
-		
+
 		// Check if we already have a screenshot of this frame.
-		if(!(videoElement.current.currentTime in screenshots)) {
+		if (!(videoElement.current.currentTime in screenshots)) {
 			// If we don't then take one.
 			const screenshot = saveScreenshot();
-			screenshots[videoElement.current.currentTime] = screenshot;
+			let oldScreenshots = screenshots;
+			oldScreenshots[videoElement.current.currentTime] = screenshot;
+			setScreenshots(oldScreenshots);
 		}
 
 		// We are no longer drawing.
@@ -356,16 +360,18 @@ const CanvasComponent = () => {
 				[initialX, initialY + yPercent],
 				[xPercent, yPercent],
 			];
-
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
+			newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
 
 			setAnnotations([...annotations, newAnnotation]);
 
 			// Check if we already have a screenshot of this frame.
-			if(!(videoElement.current.currentTime in screenshots)) {
+			if (!(videoElement.current.currentTime in screenshots)) {
 				// If we don't then take one.
 				const screenshot = saveScreenshot();
-				screenshots[videoElement.current.currentTime] = screenshot;
+				let oldScreenshots = screenshots;
+				oldScreenshots[videoElement.current.currentTime] = screenshot;
+				setScreenshots(oldScreenshots);
 			}
 
 			// NEVER CLEARS NEWANNOTATIONS
@@ -382,59 +388,42 @@ const CanvasComponent = () => {
 	};
 
 	return (
-		<div style={{display: "flex", flexDirection: "row"}}>
+		<>
 			<div>
-				<div className="CanvasComponent">
-					{videoSrc && (
+				<div className="CanvasComponent" id="canvas-component">
+					{videoSrc && <video ref={videoElement} src={"file://" + videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4"></video>}
 
-						<video ref={videoElement} src={"file://"+videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4">
-						</video>
+					{videoSrc && <canvas ref={screenshotCanvas} width={canvasWidth + "px"} height={canvasHeight + "px"} className="screenshotCanvas" />}
+
+					{videoSrc && (
+						<canvas
+							ref={drawingCanvas}
+							onMouseDown={(e) => mouseDown(e)}
+							onMouseMove={(e) => mouseMove(e)}
+							onMouseUp={(e) => mouseUp(e)}
+							width={canvasWidth + "px"}
+							height={canvasHeight + "px"}
+							className="drawingCanvas"
+						/>
 					)}
 
-					{videoSrc && <canvas 
-						ref={screenshotCanvas} 
-						width={canvasWidth + "px"}
-						height={canvasHeight + "px"}
-						className="screenshotCanvas"
-					/>}
-
-					{videoSrc && <canvas
-						ref={drawingCanvas}
-						onMouseDown={(e) => mouseDown(e)}
-						onMouseMove={(e) => mouseMove(e)}
-						onMouseUp={(e) => mouseUp(e)}
-						width={canvasWidth + "px"}
-						height={canvasHeight + "px"}
-						className="drawingCanvas"
-					/>}
-
-					{videoSrc && <canvas
-						ref={displayCanvas}
-						onMouseDown={(e) => mouseDown(e)}
-						onMouseMove={(e) => mouseMove(e)}
-						onMouseUp={(e) => mouseUp(e)}
-						width={canvasWidth + "px"}
-						height={canvasHeight + "px"}
-						className="displayCanvas"
-					/>}
+					{videoSrc && (
+						<canvas
+							ref={displayCanvas}
+							onMouseDown={(e) => mouseDown(e)}
+							onMouseMove={(e) => mouseMove(e)}
+							onMouseUp={(e) => mouseUp(e)}
+							width={canvasWidth + "px"}
+							height={canvasHeight + "px"}
+							className="displayCanvas"
+						/>
+					)}
 				</div>
-				<button onClick={() => pauseVideo()}>Pause</button>
-				<button onClick={() => playVideo()}>Play</button>
-				<button onClick={() => nextFrame()}>Next Frame</button>
-				<button onClick={() => previousFrame()}>Previous Frame</button>
-				<button onClick={() => playbackRate(0.5)}>0.5X</button>
-				<button onClick={() => playbackRate(1)}>1X</button>
-				<button onClick={() => playbackRate(2)}>2X</button>
-				<button onClick={() => playbackRate(4)}>4X</button>
-				<br/>
-				<p>NOTE: We wont show this control to the end user, Just for testing the goto function.</p>
-				<input onChange={(event) => {gotoTime(event.target.value)}}></input>
-
+				{videoSrc && <ToolBar playVideo={playVideo} pauseVideo={pauseVideo} playbackRate={playbackRate} nextFrame={nextFrame} previousFrame={previousFrame}></ToolBar>}
 			</div>
-			<ToolBar></ToolBar>
 			{/* <button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
 			<button onClick={() => {currentTool = 1;}}>Draw polygon.</button> */}
-		</div>
+		</>
 	);
 };
 

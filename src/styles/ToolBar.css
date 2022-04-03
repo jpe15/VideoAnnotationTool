@@ -1,5 +1,5 @@
 .tool-bar {
-	background-color: black;
+	/* background-color: black;
 	padding: 3em 0.5em;
 	gap: 3em;
 	display: flex;
@@ -10,27 +10,47 @@
 	border-radius: 10em;
 	max-width: fit-content;
 	box-shadow: 0.2em 0.2em 0.2em rgb(63, 63, 63);
-	margin: auto;
+	margin: auto; */
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	justify-content: space-evenly;
+	background-color: black;
+	padding: 0;
+	margin: 0;
 }
 
-.tool-bar__button {
+.tool-bar__section {
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	gap: 0.5em;
+}
+
+.tool-bar__section > button {
+	font-size: 1.75rem;
+	width: 5rem;
+	aspect-ratio: 1 / 1;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
 	border: none;
-	border: 3px solid black;
-	padding: 1em;
 	box-shadow: none;
-	background-color: black;
-	
-}
-
-.tool-bar__button--active {
-	border: 3px solid white;
-	border-radius: 1em;
-	padding: 1em;
-	box-shadow: none;
-	background-color: black;
-}
-
-.tool-bar__icons {
+	background-color: transparent;
 	color: white;
-	background-color: black;
+	padding: 0;
+	margin: 0;
+}
+
+.tool-bar__section > button:hover {
+	color: #82cfff;
+	cursor: pointer;
+}
+
+.tool-bar__section > button:active {
+	color: #0f62fe;
+	cursor: pointer;
 }

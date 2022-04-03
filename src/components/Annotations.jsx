@@ -22,12 +22,12 @@ const updateComment =  (comment) => {
 return (
 
 
-    <div class = "card">
-        <h4 style = {{color: "black"}}>
-            Label: < input type = "text"   placeholder="Enter label" value = {annotation?.label} onChange = {(e) => updateLabel(e.target.value)}/> </h4>
-        <h4 style = {{color: "black"}}>Type: {annotation?.type}</h4>
-        <h4 style = {{color: "black"}}>
-        Comment: <input type = "text"  placeholder="Enter comment" value = {annotation?.comment} onChange = {(e) => updateComment(e.target.value)}/>
+    <div className = "card">
+        <h4 style = {{color: "black", margin: "0"}}>
+            < input type = "text" value = {annotation?.label} onChange = {(e) => updateLabel(e.target.value)}/> </h4>
+        <p style = {{color: "black", paddingRight: "0.5rem", fontWeight: "900", fontSize: "1.75rem", opacity: "0.2", textAlign: "right", width: "100%", margin: "0", marginBottom: "0.5rem"}}>{annotation?.type}</p>
+        <h4 style = {{color: "black", margin: "0"}}>
+        <textarea rows="5" placeholder="Comment" onChange={(e) => updateComment(e.target.value)} ></textarea>
         </h4>
         {/* <p style = {{color: "white"}}> */}
             {/* {annotation?.points.map((point) => { */}
