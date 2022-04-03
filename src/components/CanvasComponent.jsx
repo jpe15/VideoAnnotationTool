@@ -179,9 +179,10 @@ const CanvasComponent = () => {
 			if (annotation.type == "BOX") {
 				// Get the boxes bounds.
 				const [startX, startY] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1]);
-				const [endX, endY] = percentToCanvasPixels(annotation["points"][3][0], annotation["points"][3][1]);
+				const [endX, endY] = percentToCanvasPixels(annotation["points"][1][0], annotation["points"][1][1]);
 				// Draw it on the display canvas.
 				displayContext.strokeRect(startX, startY, endX - startX, endY - startY);
+		
 			}
 			if (annotation.type == "POLYGON") {
 				// Get the first point.
@@ -368,14 +369,18 @@ const CanvasComponent = () => {
 			newAnnotation["type"] = "BOX";
 			// newAnnotation["start"] = [initialX, initialY];
 			// newAnnotation["end"] = [xPercent, yPercent];
-			newAnnotation["points"] = [
+		 	newAnnotation["points"] = [
 				[initialX, initialY],
-				[initialX + xPercent, initialY],
-				[initialX, initialY + yPercent],
+				//[initialX + xPercent, initialY],
+				//[initialX, initialY + yPercent],
 				[xPercent, yPercent],
 			];
+		
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
 			newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
+			newAnnotation["points"]=[[initialX,initialY],[xPercent,yPercent]];
+			
+			
 
 			setAnnotations([...annotations, newAnnotation]);
 
