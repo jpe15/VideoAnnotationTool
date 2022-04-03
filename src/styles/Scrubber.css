@@ -1,0 +1,22 @@
+.scrubberContainer {
+	width: 100%;
+	height: 50px;
+}
+
+.scrubber {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 50px;
+	background: black;
+	margin: 0;
+	outline: none;
+}
+
+.scrubber::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance:none;
+	width: 25px;
+	height: 28px;
+	background: white;
+	cursor: pointer;
+}
