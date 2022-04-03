@@ -6,7 +6,6 @@ import "../styles/Annotations.css";
 const Annotations = ({annotation, index}) =>{
     const [annotations, setAnnotations] = useAnnotations();
     useEffect(() => {
-        console.log(annotation);
     }, [annotation])
 const updateLabel = (label) => {
     let oldAnnotations = annotations;

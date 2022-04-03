@@ -4,17 +4,16 @@ import "../styles/Canvas.css";
 import { useAnnotations, useTool, useVideoPath, useScreenshots } from "./AppContext";
 import ToolBar from "./ToolBar";
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const CanvasComponent = () => {
 	const [screenshots, setScreenshots] = useScreenshots();
 	const [annotations, setAnnotations] = useAnnotations();
 	const [tool] = useTool();
-	const [videoSrc] = useVideoPath();
-
-	useEffect(() => {
-		if (videoSrc) {
-			drawAnnotations();
-		}
-	}, [annotations]);
+	const [videoSrcG] = useVideoPath();
+	const [videoSrc, setVideoSrc] = useState();
 
 	// At what radius to the beginning of a polygon to close it.
 	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
@@ -42,6 +41,23 @@ const CanvasComponent = () => {
 	// Create variables used to change canvas size.
 	const [canvasWidth, setCanvasWidth] = useState(0);
 	const [canvasHeight, setCanvasHeight] = useState(0);
+
+	useEffect(() => {
+		if (videoSrc && canvasHeight !== 0 && canvasWidth !== 0) {
+			drawAnnotations();
+		}
+	}, [annotations]);
+
+	useEffect(() => {
+		setVideoSrc(videoSrcG);
+	}, [videoSrcG]);
+
+	useEffect(() => {
+		if (canvasWidth !== 0 && canvasHeight !== 0) {
+			resizeCanvas();
+			drawAnnotations();
+		}
+	}, [canvasWidth, canvasHeight]);
 
 	// Create refs to access video and canvas elements.
 	const videoElement = useRef(null);
@@ -130,7 +146,7 @@ const CanvasComponent = () => {
 	};
 
 	// Function that will run once the video is loaded and resize the canvas to match.
-	const resizeCanvas = () => {
+	const resizeCanvas = async () => {
 		// Get video dimensions.
 		const width = videoElement.current.getBoundingClientRect().width;
 		const height = videoElement.current.getBoundingClientRect().height;
@@ -164,7 +180,6 @@ const CanvasComponent = () => {
 				// Get the boxes bounds.
 				const [startX, startY] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1]);
 				const [endX, endY] = percentToCanvasPixels(annotation["points"][3][0], annotation["points"][3][1]);
-				console.log(startX, startY, endX, endY);
 				// Draw it on the display canvas.
 				displayContext.strokeRect(startX, startY, endX - startX, endY - startY);
 			}
@@ -313,7 +328,6 @@ const CanvasComponent = () => {
 	const mouseMove = (e) => {
 		// Check if we are currently drawing a box
 		if (drawingBox) {
-			console.log("DRAWING BOX.");
 			// Get the current mouse position.
 			const clientX = e.clientX;
 			const clientY = e.clientY;
