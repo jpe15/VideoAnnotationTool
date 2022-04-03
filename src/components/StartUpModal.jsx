@@ -46,7 +46,7 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 				<div className="modal__body--newproj">
 					{!isNewProj && <button onClick={() => {setIsNewProj(true);}}>Create Project</button>}
 					{isNewProj && <input placeholder="Name your project" onChange={(e) => {setNewProjName(e.target.value)}}></input>}
-					{newProjName !== "" && isNewProj && <button onClick={() => {uploadFile();}}>Start!</button>}
+					{newProjName !== "" && isNewProj && <button onClick={() => {uploadFile();}}>Select Video</button>}
 					<input id="selectFileN" type={"file"} style={{ display: "none" }} onChange={(e) => {setProjectName(newProjName); setVideoPath(e.target.files[0].path);}}></input>
 				</div>
 				<button onClick={() => {setIsNewProj(false);}}>Import Project</button>

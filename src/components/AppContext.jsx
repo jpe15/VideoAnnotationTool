@@ -57,12 +57,12 @@ const AppContext = ({ children }) => {
 
 	useEffect(() => {
 		
-		if (sessionStorage.getItem("videoPath") && sessionStorage.getItem("projectName")) {
-			setVideoPathS(sessionStorage.getItem("videoPath"));
-			setProjectNameS(sessionStorage.getItem("projectName"));
-			setAnnotationsS(JSON.parse(sessionStorage.getItem("annotations")));
-			setToolS(sessionStorage.getItem("tool"));
-			setScreenshotsS(JSON.parse(sessionStorage.getItem("screenshots")));
+		if (localStorage.getItem("videoPath") && localStorage.getItem("projectName")) {
+			setVideoPathS(localStorage.getItem("videoPath"));
+			setProjectNameS(localStorage.getItem("projectName"));
+			setAnnotationsS(JSON.parse(localStorage.getItem("annotations")));
+			setToolS(localStorage.getItem("tool"));
+			setScreenshotsS(JSON.parse(localStorage.getItem("screenshots")));
 			setIsStartUpModal(false);
 		} else {
 			setIsStartUpModal(true);
@@ -79,27 +79,27 @@ const AppContext = ({ children }) => {
 	}, [isStartUpModal]);
 
 	const setProjectName = (projectNameN) => {
-		sessionStorage.setItem("projectName", projectNameN);
+		localStorage.setItem("projectName", projectNameN);
 		setProjectNameS(projectNameN);
 	};
 
 	const setAnnotations = (annotationsN) => {
-		sessionStorage.setItem("annotations", JSON.stringify(annotationsN));
+		localStorage.setItem("annotations", JSON.stringify(annotationsN));
 		setAnnotationsS(annotationsN);
 	};
 
 	const setScreenshots = (screenshotsN) => {
-		sessionStorage.setItem("screenshots", JSON.stringify(screenshotsN));
+		localStorage.setItem("screenshots", JSON.stringify(screenshotsN));
 		setScreenshotsS(screenshotsN);
 	};
 
 	const setTool = (toolN) => {
-		sessionStorage.setItem("tool", toolN);
+		localStorage.setItem("tool", toolN);
 		setToolS(toolN);
 	};
 
 	const setVideoPath = (videoPathN) => {
-		sessionStorage.setItem("videoPath", videoPathN);
+		localStorage.setItem("videoPath", videoPathN);
 		setVideoPathS(videoPathN);
 	};
 

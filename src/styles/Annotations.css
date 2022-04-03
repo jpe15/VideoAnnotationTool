@@ -17,7 +17,6 @@ input[type="text"] {
 	width: 100%;
 	background-color: #c1c7cd;
 	height: 2em;
-	text-transform: uppercase;
 }
 
 input[type="text"]:placeholder-shown {
