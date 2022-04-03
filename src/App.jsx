@@ -9,11 +9,6 @@ function App() {
 	const [videoPath, setVideoPath] = useState("");
 	const [annotations, setAnnotations] = useState([]);
 
-	useEffect(() => {
-		console.log("loaded");
-		// setVideoPath("C:\\Users\\nickd\\Videos\\Scrum4Group9.mp4")
-	}, []);
-
 	return (
 		<AppContext>
 			<div className="Top-Buttons"><TopButtons projName={"test"}></TopButtons></div>

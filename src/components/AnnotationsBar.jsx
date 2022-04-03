@@ -7,8 +7,8 @@ const AnnotationsBar = () => {
 	const [annotations, setAnnotations] = useAnnotations();
 	return (
 		<>
-			{annotations?.map((annotation, idx) => {
-				return <Annotations annotation={annotation} index={idx} />;
+			{annotations && annotations?.map((annotation, idx) => {
+				return <Annotations key={idx} annotation={annotation} index={idx} />;
 			})}
 		</>
 	);
