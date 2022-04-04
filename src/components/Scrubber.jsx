@@ -28,7 +28,6 @@ const Scrubber = ({ currentPercent, gotoPercent }) => {
 
 	const mouseDown = (e) => {
 		const currentPercent = coordToPercent(e.clientX);
-		console.log(currentPercent);
 		gotoPercent(currentPercent);
 	}
 

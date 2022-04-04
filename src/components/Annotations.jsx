@@ -1,11 +1,12 @@
 import React, {useEffect} from "react";
-import {useAnnotations} from "./AppContext";
+import {useAnnotations, useJumpToTime} from "./AppContext";
 import "../styles/Annotations.css";
 import {MdDeleteForever} from "react-icons/md";
 
 
 const Annotations = ({annotation, index}) =>{
     const [annotations, setAnnotations] = useAnnotations();
+    const [jumpToTime, setJumpToTime] = useJumpToTime();
     useEffect(() => {
     }, [annotation])
 const updateLabel = (label) => {
@@ -23,6 +24,18 @@ const deleteAnnotations = (index) => {
     oldAnnotations.splice (index, 1);
     setAnnotations([...oldAnnotations]);
 }
+
+const setShownCard = () => {
+    let oldAnnotations = annotations;
+    for (let i in oldAnnotations) {
+        if (i == index) {
+            oldAnnotations[index]["selected"] = true;
+        } else {
+            oldAnnotations[i]["selected"] = false;
+        }
+    }
+    setJumpToTime(annotation.timestamp)
+}
     //updateComment
 return (
 
@@ -34,7 +47,10 @@ return (
         <h4 style = {{color: "black", margin: "0"}}>
         <textarea rows="5" value={annotation?.comment} onChange={(e) => updateComment(e.target.value)} ></textarea>
         </h4>
-        <button className = "card_delAnnotations" onClick={() => deleteAnnotations(index)}><MdDeleteForever size = {20}/></button>
+        <div className="card__button-holder">
+            <button className = "card_delAnnotations" onClick={() => deleteAnnotations(index)}><MdDeleteForever/></button>
+            <button className="card__jump" onClick={() => {setShownCard()}}>Show Annotation</button>
+        </div>
         {/* <p style = {{color: "white"}}> */}
             {/* {annotation?.points.map((point) => { */}
                  {/* return <p style = {{color: "white"}} > {point}</p>; */}
