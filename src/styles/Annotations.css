@@ -46,13 +46,12 @@ input[type="text"]:placeholder-shown {
 	margin: 0;
 	background-color: transparent;
 	border: none;
-	color: black;
+	color: red;
 	box-shadow: none;
 	opacity: 1;
   }
 
   .card_delAnnotations:hover {
 	opacity: 0.6;
-	background-color: red;
   }
 
