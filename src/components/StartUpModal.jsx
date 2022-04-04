@@ -5,7 +5,7 @@ import { useProjectName, useStartUpModal, useVideoPath } from "./AppContext";
 
 const customStyles = {
 	overlay: {
-		zIndex: "11",
+		zIndex: "17",
 	},
 	content: {
 		top: "50%",
