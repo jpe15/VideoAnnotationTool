@@ -17,6 +17,11 @@ const updateComment =  (comment) => {
     oldAnnotations [index].comment = comment;
     setAnnotations ([...oldAnnotations]);
 }
+const deleteAnnotations = (index) => {
+    let oldAnnotations = annotations;
+    oldAnnotations.splice (index, 1);
+    setAnnotations(oldAnnotations);
+}
     //updateComment
 return (
 
