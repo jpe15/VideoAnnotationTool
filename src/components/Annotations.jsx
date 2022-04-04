@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import {useAnnotations} from "./AppContext";
 import "../styles/Annotations.css";
+import {MdDeleteForever} from "react-icons/md";
 
 
 const Annotations = ({annotation, index}) =>{
@@ -17,6 +18,11 @@ const updateComment =  (comment) => {
     oldAnnotations [index].comment = comment;
     setAnnotations ([...oldAnnotations]);
 }
+const deleteAnnotations = (index) => {
+    let oldAnnotations = annotations;
+    oldAnnotations.splice (index, 1);
+    setAnnotations([...oldAnnotations]);
+}
     //updateComment
 return (
 
@@ -28,6 +34,7 @@ return (
         <h4 style = {{color: "black", margin: "0"}}>
         <textarea rows="5" placeholder="Comment" onChange={(e) => updateComment(e.target.value)} ></textarea>
         </h4>
+        <button className = "card_delAnnotations" onClick={() => deleteAnnotations(index)}><MdDeleteForever size = {20}/></button>
         {/* <p style = {{color: "white"}}> */}
             {/* {annotation?.points.map((point) => { */}
                  {/* return <p style = {{color: "white"}} > {point}</p>; */}

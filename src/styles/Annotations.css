@@ -39,3 +39,19 @@ input[type="text"]:placeholder-shown {
 .card:hover {
 	box-shadow: 1px 1px 2px 1px #0008;
 }
+
+
+.card_delAnnotations {  
+	padding: 0;
+	margin: 0;
+	background-color: transparent;
+	border: none;
+	color: red;
+	box-shadow: none;
+	opacity: 1;
+  }
+
+  .card_delAnnotations:hover {
+	opacity: 0.6;
+  }
+
