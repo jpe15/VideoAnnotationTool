@@ -47,5 +47,11 @@ input[type="text"]:placeholder-shown {
 	background-color: transparent;
 	border: none;
 	color: red;
+	box-shadow: none;
+	opacity: 1;
+  }
+
+  .card_delAnnotations:hover {
+	color: red;
   }
 
