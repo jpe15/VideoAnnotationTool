@@ -74,7 +74,7 @@ const CanvasComponent = () => {
 	const saveScreenshot = () => {
 		const screenshotContext = screenshotCanvas.current.getContext("2d");
 		screenshotContext.drawImage(videoElement.current, 0, 0, canvasWidth, canvasHeight);
-		const imgData = screenshotCanvas.current.toDataURL("image/jpg");
+		const imgData = screenshotCanvas.current.toDataURL("image/png");
 		return imgData;
 	};
 
