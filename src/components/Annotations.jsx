@@ -20,7 +20,7 @@ const updateComment =  (comment) => {
 const deleteAnnotations = (index) => {
     let oldAnnotations = annotations;
     oldAnnotations.splice (index, 1);
-    setAnnotations(oldAnnotations);
+    setAnnotations([...oldAnnotations]);
 }
     //updateComment
 return (
@@ -33,6 +33,7 @@ return (
         <h4 style = {{color: "black", margin: "0"}}>
         <textarea rows="5" placeholder="Comment" onChange={(e) => updateComment(e.target.value)} ></textarea>
         </h4>
+        <button className = "close" onClick={annotation?.deleteAnnotations}></button>
         {/* <p style = {{color: "white"}}> */}
             {/* {annotation?.points.map((point) => { */}
                  {/* return <p style = {{color: "white"}} > {point}</p>; */}
