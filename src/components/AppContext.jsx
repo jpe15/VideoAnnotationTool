@@ -2,20 +2,18 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import StartUpModal from "./StartUpModal";
 import "../styles/App.css";
 
-export const AnnotationsContext = createContext();
-export const UpdateAnnotationsContext = createContext();
-
-export const ToolContext = createContext();
-export const UpdateToolContext = createContext();
-
-export const VideoPathContext = createContext();
-export const UpdateVideoPathContext = createContext();
-
-export const ScreenshotsContext = createContext();
-export const UpdateScreenshotsContext = createContext();
-
-export const ProjectNameContext = createContext();
-export const UpdateProjectNameContext = createContext();
+const AnnotationsContext = createContext();
+const UpdateAnnotationsContext = createContext();
+const ToolContext = createContext();
+const UpdateToolContext = createContext();
+const VideoPathContext = createContext();
+const UpdateVideoPathContext = createContext();
+const ScreenshotsContext = createContext();
+const UpdateScreenshotsContext = createContext();
+const ProjectNameContext = createContext();
+const UpdateProjectNameContext = createContext();
+const StartUpModalContext = createContext();
+const UpdateStartUpModalContext = createContext();
 
 export const useScreenshots = () => {
 	const screenshots = useContext(ScreenshotsContext);
@@ -47,6 +45,12 @@ export const useProjectName = () => {
 	return [projectName, setProjectName];
 };
 
+export const useStartUpModal = () => {
+	const isStartUpModal = useContext(StartUpModalContext);
+	const setIsStartUpModal = useContext(UpdateStartUpModalContext);
+	return [isStartUpModal, setIsStartUpModal];
+};
+
 const AppContext = ({ children }) => {
 	const [annotations, setAnnotationsS] = useState([]);
 	const [screenshots, setScreenshotsS] = useState({});
@@ -56,13 +60,12 @@ const AppContext = ({ children }) => {
 	const [projectName, setProjectNameS] = useState("");
 
 	useEffect(() => {
-		
-		if (sessionStorage.getItem("videoPath") && sessionStorage.getItem("projectName")) {
-			setVideoPathS(sessionStorage.getItem("videoPath"));
-			setProjectNameS(sessionStorage.getItem("projectName"));
-			setAnnotationsS(JSON.parse(sessionStorage.getItem("annotations")));
-			setToolS(sessionStorage.getItem("tool"));
-			setScreenshotsS(JSON.parse(sessionStorage.getItem("screenshots")));
+		if (localStorage.getItem("videoPath") && localStorage.getItem("projectName")) {
+			setVideoPathS(localStorage.getItem("videoPath"));
+			setProjectNameS(localStorage.getItem("projectName"));
+			setAnnotationsS(JSON.parse(localStorage.getItem("annotations")));
+			setToolS(localStorage.getItem("tool"));
+			setScreenshotsS(JSON.parse(localStorage.getItem("screenshots")));
 			setIsStartUpModal(false);
 		} else {
 			setIsStartUpModal(true);
@@ -75,61 +78,72 @@ const AppContext = ({ children }) => {
 		}
 	}, [videoPath]);
 
-	useEffect(() => {
-	}, [isStartUpModal]);
+	useEffect(() => {console.log(isStartUpModal, " set to");}, [isStartUpModal]);
 
 	const setProjectName = (projectNameN) => {
-		sessionStorage.setItem("projectName", projectNameN);
+		localStorage.setItem("projectName", projectNameN);
 		setProjectNameS(projectNameN);
 	};
 
 	const setAnnotations = (annotationsN) => {
-		sessionStorage.setItem("annotations", JSON.stringify(annotationsN));
+		localStorage.setItem("annotations", JSON.stringify(annotationsN));
 		setAnnotationsS(annotationsN);
 	};
 
 	const setScreenshots = (screenshotsN) => {
-		sessionStorage.setItem("screenshots", JSON.stringify(screenshotsN));
+		localStorage.setItem("screenshots", JSON.stringify(screenshotsN));
 		setScreenshotsS(screenshotsN);
 	};
 
 	const setTool = (toolN) => {
-		sessionStorage.setItem("tool", toolN);
+		localStorage.setItem("tool", toolN);
 		setToolS(toolN);
 	};
 
 	const setVideoPath = (videoPathN) => {
-		sessionStorage.setItem("videoPath", videoPathN);
+		localStorage.setItem("videoPath", videoPathN);
 		setVideoPathS(videoPathN);
 	};
 
-	const createNewProject = (videoPath) => {
+	const createNewProject = (vidpath, projname) => {
+		setVideoPath(vidpath);
+		setProjectName(projname);
+		setAnnotations([]);
+		setTool(0);
+		setScreenshots(0);
 		setIsStartUpModal(false);
 	};
 
 	return (
-		<ProjectNameContext.Provider value={projectName}>
-			<UpdateProjectNameContext.Provider value={setProjectName}>
-				<ScreenshotsContext.Provider value={screenshots}>
-					<UpdateScreenshotsContext.Provider value={setScreenshots}>
-						<AnnotationsContext.Provider value={annotations}>
-							<UpdateAnnotationsContext.Provider value={setAnnotations}>
-								<ToolContext.Provider value={tool}>
-									<UpdateToolContext.Provider value={setTool}>
-										<VideoPathContext.Provider value={videoPath}>
-											<UpdateVideoPathContext.Provider value={setVideoPath}>
-												<StartUpModal isOpen={isStartUpModal} createNewProject={createNewProject} />
-												<div className="container">{children}</div>
-											</UpdateVideoPathContext.Provider>
-										</VideoPathContext.Provider>
-									</UpdateToolContext.Provider>
-								</ToolContext.Provider>
-							</UpdateAnnotationsContext.Provider>
-						</AnnotationsContext.Provider>
-					</UpdateScreenshotsContext.Provider>
-				</ScreenshotsContext.Provider>
-			</UpdateProjectNameContext.Provider>
-		</ProjectNameContext.Provider>
+		<StartUpModalContext.Provider value={isStartUpModal}>
+			<UpdateStartUpModalContext.Provider value={setIsStartUpModal}>
+				<ProjectNameContext.Provider value={projectName}>
+					<UpdateProjectNameContext.Provider value={setProjectName}>
+						<ScreenshotsContext.Provider value={screenshots}>
+							<UpdateScreenshotsContext.Provider value={setScreenshots}>
+								<AnnotationsContext.Provider value={annotations}>
+									<UpdateAnnotationsContext.Provider value={setAnnotations}>
+										<ToolContext.Provider value={tool}>
+											<UpdateToolContext.Provider value={setTool}>
+												<VideoPathContext.Provider value={videoPath}>
+													<UpdateVideoPathContext.Provider value={setVideoPath}>
+														<StartUpModal
+															isOpen={isStartUpModal}
+															createNewProject={createNewProject}
+														/>
+														<div className="container">{children}</div>
+													</UpdateVideoPathContext.Provider>
+												</VideoPathContext.Provider>
+											</UpdateToolContext.Provider>
+										</ToolContext.Provider>
+									</UpdateAnnotationsContext.Provider>
+								</AnnotationsContext.Provider>
+							</UpdateScreenshotsContext.Provider>
+						</ScreenshotsContext.Provider>
+					</UpdateProjectNameContext.Provider>
+				</ProjectNameContext.Provider>
+			</UpdateStartUpModalContext.Provider>
+		</StartUpModalContext.Provider>
 	);
 };
 

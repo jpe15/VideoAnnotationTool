@@ -1,5 +1,6 @@
-import React from "react";
+import React from "react" ;
 import { useState, useRef, useEffect } from "react";
+import Scrubber from "./Scrubber.jsx";
 import "../styles/Canvas.css";
 import { useAnnotations, useTool, useVideoPath, useScreenshots } from "./AppContext";
 import ToolBar from "./ToolBar";
@@ -14,6 +15,7 @@ const CanvasComponent = () => {
 	const [tool] = useTool();
 	const [videoSrcG] = useVideoPath();
 	const [videoSrc, setVideoSrc] = useState();
+	const [currentVideoPercent, setCurrentVideoPercent] = useState(0);
 
 	// At what radius to the beginning of a polygon to close it.
 	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
@@ -76,11 +78,24 @@ const CanvasComponent = () => {
 		return imgData;
 	};
 
+	// Function to monitor current timestamp
+	const timeChange = () => {
+		const totalTime = videoElement.current.duration;
+		const currentPercent = (videoElement.current.currentTime/totalTime)*100;
+		setCurrentVideoPercent(currentPercent);
+	}
+
 	// Function to seek to a specific time stamp
 	const gotoTime = (time) => {
 		videoElement.current.currentTime = time;
 		drawAnnotations();
 	};
+
+	// Function to seek to a specific percent of the video.
+	const gotoPercent = (percent) => {
+		const totalTime = videoElement.current.duration;
+		gotoTime(totalTime*(percent/100));
+	}
 
 	// Function to change playback rate.
 	const playbackRate = (speed) => {
@@ -179,9 +194,10 @@ const CanvasComponent = () => {
 			if (annotation.type == "BOX") {
 				// Get the boxes bounds.
 				const [startX, startY] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1]);
-				const [endX, endY] = percentToCanvasPixels(annotation["points"][3][0], annotation["points"][3][1]);
+				const [endX, endY] = percentToCanvasPixels(annotation["points"][1][0], annotation["points"][1][1]);
 				// Draw it on the display canvas.
 				displayContext.strokeRect(startX, startY, endX - startX, endY - startY);
+		
 			}
 			if (annotation.type == "POLYGON") {
 				// Get the first point.
@@ -243,6 +259,7 @@ const CanvasComponent = () => {
 		newAnnotation["points"] = currentPoints;
 		newAnnotation["timestamp"] = videoElement.current.currentTime;
 		newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
+		newAnnotation["comment"] = "Placeholder comment";
 
 		setAnnotations([...annotations, newAnnotation]);
 
@@ -368,14 +385,11 @@ const CanvasComponent = () => {
 			newAnnotation["type"] = "BOX";
 			// newAnnotation["start"] = [initialX, initialY];
 			// newAnnotation["end"] = [xPercent, yPercent];
-			newAnnotation["points"] = [
-				[initialX, initialY],
-				[initialX + xPercent, initialY],
-				[initialX, initialY + yPercent],
-				[xPercent, yPercent],
-			];
+		
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
 			newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
+			newAnnotation["points"]=[[initialX,initialY],[xPercent,yPercent]];
+			newAnnotation["comment"] = "Placeholder comment";
 
 			setAnnotations([...annotations, newAnnotation]);
 
@@ -405,7 +419,7 @@ const CanvasComponent = () => {
 		<>
 			<div>
 				<div className="CanvasComponent" id="canvas-component">
-					{videoSrc && <video ref={videoElement} src={"file://" + videoSrc} className="video" onLoadedData={resizeCanvas} type="video/mp4"></video>}
+					{videoSrc && <video ref={videoElement} src={"file://" + videoSrc} className="video" onLoadedData={resizeCanvas} onTimeUpdate={timeChange} type="video/mp4"></video>}
 
 					{videoSrc && <canvas ref={screenshotCanvas} width={canvasWidth + "px"} height={canvasHeight + "px"} className="screenshotCanvas" />}
 
@@ -433,6 +447,7 @@ const CanvasComponent = () => {
 						/>
 					)}
 				</div>
+				{videoSrc && <Scrubber currentPercent={currentVideoPercent} gotoPercent={gotoPercent}></Scrubber>}
 				{videoSrc && <ToolBar playVideo={playVideo} pauseVideo={pauseVideo} playbackRate={playbackRate} nextFrame={nextFrame} previousFrame={previousFrame}></ToolBar>}
 			</div>
 			{/* <button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
