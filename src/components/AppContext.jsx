@@ -110,7 +110,7 @@ const AppContext = ({ children }) => {
 		setProjectName(projname);
 		setAnnotations([]);
 		setTool(0);
-		setScreenshots(0);
+		setScreenshots({});
 		setIsStartUpModal(false);
 	};
 

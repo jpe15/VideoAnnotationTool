@@ -2,19 +2,17 @@ const { dialog } = require('electron')
 const path = require('path')
 const fs = require('fs')
 
-async function exportData(projName, data, metadata, videoPath) {
+async function exportData(projName, videoPath, annotatedFrames, images) {
 
+    console.log('Annotated frames: ', annotatedFrames);
+    
     // Using an array for when PNG exporting is added.
     let filesExported = []
     let directory = ''
     
     let options = {
-        title: "Export JSON file",
-        defaultPath: `${projName}.json`,
+        title: "Select folder to export to",
         buttonLabel: "Export",
-        filters: [
-            { name: 'JSON (*.json)', extensions: ['json'] }
-        ],
         properties: ['openDirectory']
     }
 
@@ -36,41 +34,48 @@ async function exportData(projName, data, metadata, videoPath) {
         let filename = parts[parts.length - 1]
 
         directory = directory.replace(filename, '')
-        filename = filename.split('.')[0]
 
-        let Json_obj = JSON.parse('{"projectName": "", "projectPath": "", "VideoPath": "", "annotatedFrames": "" }')
-
-        let metadata_obj = JSON.parse('{"metadata":{"imageName": "" ,"timestamp": "", "comment": ""}}')
-
-
-        let annotation = JSON.parse('{"annotation" : ""}') ;
-        annotation["annotation"] = data;
-
-
-        let aDataFaram = [metadata_obj,annotation];
-        Json_obj["annotatedFrames"] = aDataFaram
-
-       //let unique = [... new Set(data.map(i => i.timestamp))];
-
-
-
-        //assigning data to main JSON object
-        Json_obj["projectName"] = projName
-        Json_obj["projectPath"] = directory
-        Json_obj["VideoPath"] = videoPath
-       
-        Json_obj["annotatedFrames"]["annotations"] = data
+        let outline = {
+			'projectName': projName,
+            'projectPath': directory,
+			'videoPath': videoPath,
+			'annotatedFrames': annotatedFrames
+		};
         
         //function responsible for writing data on file
         //path will be resolved through path module the JSON will be converted to string and written on file using JSON.stringigy
-        fs.writeFile(path.resolve(directory, `${filename}.json`), JSON.stringify(Json_obj), (err) => {
+        fs.writeFile(path.resolve(directory, `${projName}.json`), JSON.stringify(outline), (err) => {
             //error handling
-            if (err) throw err;
+            if (err){
+                console.error(err);
+                throw err;
+            }
             else{
                 //managing the data in array
                 filesExported.push(filename)
             }
         });
+
+        // Export images
+        let keys = Object.keys(images);
+        for(let key of keys){
+
+            // strip off the data: url prefix to get just the base64-encoded bytes
+            const img = images[key];
+            const data = img.replace(/^data:image\/\w+;base64,/, "");
+            const buf = Buffer.from(data, "base64");
+            fs.writeFile(path.resolve(directory, `${projName}_${key}.png`), buf, (err) => {
+                //error handling
+                if (err){
+                    console.error(err);
+                    throw err;
+                }
+                else{
+                    filesExported.push(filename)
+                }
+            });
+        }
+
         //success
         return {
             value: 0,
