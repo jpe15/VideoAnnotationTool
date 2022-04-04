@@ -41,28 +41,11 @@ input[type="text"]:placeholder-shown {
 }
 
 
-.card_close { 
-	
-	right: 32px;
-	top: 50px;
-	width: 32px;
-	height: 32px;
-	opacity: 0.3;
+.card_delAnnotations {  
+	padding: 0;
+	margin: 0;
+	background-color: transparent;
+	border: none;
+	color: red;
   }
-  .card_close:hover {
-	opacity: 1;
-  }
-  .card_close:before, .card_close:after {
-	position: absolute;
-	left: 15px;
-	content: ' ';
-	height: 33px;
-	width: 2px;
-	background-color: #333;
-  }
-  .card_close:before {
-	transform: rotate(45deg);
-  }
-  .card_close:after {
-	transform: rotate(-45deg);
-  }
+
