@@ -23,10 +23,8 @@ const deleteAnnotations = (index) => {
     oldAnnotations.splice (index, 1);
     setAnnotations([...oldAnnotations]);
 }
-    //updateComment
+
 return (
-
-
     <div className = "card">
         <h4 style = {{color: "black", margin: "0"}}>
             < input type = "text" value = {annotation?.label} onChange = {(e) => updateLabel(e.target.value)}/> </h4>
