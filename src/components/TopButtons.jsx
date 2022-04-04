@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useVideoPath } from "./AppContext";
+import { useScreenshots } from "./AppContext";
 import { useAnnotations } from "./AppContext";
 const electron = window.require("electron");
 
@@ -30,13 +31,15 @@ function uploadFile() {
 
 const TopButtons = ({ projName }) => {
 
-	const [, setVideoPath] = useVideoPath();
+	const [videoPath, setVideoPath] = useVideoPath();
 	const [annotations] = useAnnotations();
-
+	const [screenshots] = useScreenshots();
 	const sendExport = () => {
 		const args = {
 			projName: projName,
+			videoPath: videoPath,
 			data: annotations,
+			metadata: screenshots,
 		};
 
 		electron.ipcRenderer.send("export", args);
