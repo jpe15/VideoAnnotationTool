@@ -243,6 +243,7 @@ const CanvasComponent = () => {
 		newAnnotation["points"] = currentPoints;
 		newAnnotation["timestamp"] = videoElement.current.currentTime;
 		newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
+		newAnnotation["comment"] = "Placeholder comment";
 
 		setAnnotations([...annotations, newAnnotation]);
 
@@ -376,6 +377,7 @@ const CanvasComponent = () => {
 			];
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
 			newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
+			newAnnotation["comment"] = "Placeholder comment";
 
 			setAnnotations([...annotations, newAnnotation]);
 
