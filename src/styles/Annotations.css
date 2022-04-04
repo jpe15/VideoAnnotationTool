@@ -52,6 +52,6 @@ input[type="text"]:placeholder-shown {
   }
 
   .card_delAnnotations:hover {
-	color: red;
+	opacity: 0.6;
   }
 
