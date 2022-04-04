@@ -5,10 +5,6 @@ import "../styles/Canvas.css";
 import { useAnnotations, useTool, useVideoPath, useScreenshots, useJumpToTime } from "./AppContext";
 import ToolBar from "./ToolBar";
 
-function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 const CanvasComponent = () => {
 	const [screenshots, setScreenshots] = useScreenshots();
 	const [annotations, setAnnotations] = useAnnotations();
@@ -61,15 +57,12 @@ const CanvasComponent = () => {
 		if (canvasWidth !== 0 && canvasHeight !== 0) {
 			resizeCanvas();
 			drawAnnotations();
-			console.log(videoElement.current.currentTime);
 			setReady(true);
 		}
 	}, [canvasWidth, canvasHeight]);
 
 	useEffect(() => {
-		console.log(jumpToTime);
 		if (jumpToTime !== -1 && ready) {
-			console.log(jumpToTime);
 			gotoTime(jumpToTime);
 			setJumpToTime(-1);
 		}
@@ -206,6 +199,14 @@ const CanvasComponent = () => {
 		displayContext.clearRect(0, 0, drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
 		// Go over each annotation
 		for (const annotation of annotations) {
+			if (annotation.selected) {
+				displayContext.strokeStyle = "blue";
+				displayContext.fillStyle = "blue";
+			} else {
+				displayContext.strokeStyle = "red";
+				displayContext.fillStyle = "red";
+			}
+
 			if (annotation.timestamp != videoElement.current.currentTime) {
 				continue;
 			}
@@ -278,6 +279,7 @@ const CanvasComponent = () => {
 		newAnnotation["timestamp"] = videoElement.current.currentTime;
 		newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
 		newAnnotation["comment"] = "Placeholder comment";
+		newAnnotation["selected"] = false;
 
 		setAnnotations([...annotations, newAnnotation]);
 
@@ -408,6 +410,7 @@ const CanvasComponent = () => {
 			newAnnotation["label"] = `Unnamed ${annotations.length + 1}`;
 			newAnnotation["points"]=[[initialX,initialY],[xPercent,yPercent]];
 			newAnnotation["comment"] = "Placeholder comment";
+			newAnnotation["selected"] = false;
 
 			setAnnotations([...annotations, newAnnotation]);
 

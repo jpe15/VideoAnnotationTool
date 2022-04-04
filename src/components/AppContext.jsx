@@ -88,7 +88,6 @@ const AppContext = ({ children }) => {
 	}, [videoPath]);
 
 	useEffect(() => {
-		console.log(isStartUpModal, " set to");
 	}, [isStartUpModal]);
 
 	const setProjectName = (projectNameN) => {

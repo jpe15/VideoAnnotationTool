@@ -39,8 +39,7 @@ input[type="text"]:placeholder-shown {
 	box-shadow: 1px 1px 2px 1px #0008;
 }
 
-
-.card_delAnnotations {  
+.card_delAnnotations {
 	padding: 0;
 	margin: 0;
 	background-color: transparent;
@@ -48,9 +47,28 @@ input[type="text"]:placeholder-shown {
 	color: red;
 	box-shadow: none;
 	opacity: 1;
-  }
+	font-size: 1.5rem;
+	aspect-ratio: 1 / 1;
+}
 
-  .card_delAnnotations:hover {
+.card__button-holder {
+	display: flex;
+	flex-direction: row-reverse;
+	width: 100%;
+	gap: 5em;
+	align-items: center;
+}
+
+.card_delAnnotations:hover {
 	opacity: 0.6;
-  }
+}
 
+.card__jump {
+	padding: 0.25em;
+	margin: 0.5em;
+	background-color: #0f62fe;
+	border: none;
+	color: white;
+	box-shadow: 1px 1px 1px 0px #0008;
+	opacity: 1;
+}
