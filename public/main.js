@@ -26,6 +26,10 @@ function createWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   )
+
+  win.on('resize', () => {
+    win.reload();
+  })
 }
 
 app.on('ready', createWindow)

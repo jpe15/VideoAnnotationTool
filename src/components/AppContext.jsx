@@ -14,6 +14,14 @@ const ProjectNameContext = createContext();
 const UpdateProjectNameContext = createContext();
 const StartUpModalContext = createContext();
 const UpdateStartUpModalContext = createContext();
+const JumpToTimeContext = createContext();
+const UpdateJumpToTimeContext = createContext();
+
+export const useJumpToTime = () => {
+	const jumpToTime = useContext(JumpToTimeContext);
+	const setJumpToTime = useContext(UpdateJumpToTimeContext);
+	return [jumpToTime, setJumpToTime];
+};
 
 export const useScreenshots = () => {
 	const screenshots = useContext(ScreenshotsContext);
@@ -58,6 +66,7 @@ const AppContext = ({ children }) => {
 	const [videoPath, setVideoPathS] = useState("");
 	const [isStartUpModal, setIsStartUpModal] = useState(true);
 	const [projectName, setProjectNameS] = useState("");
+	const [jumpToTime, setJumpToTime] = useState(0);
 
 	useEffect(() => {
 		if (localStorage.getItem("videoPath") && localStorage.getItem("projectName")) {
@@ -78,7 +87,9 @@ const AppContext = ({ children }) => {
 		}
 	}, [videoPath]);
 
-	useEffect(() => {console.log(isStartUpModal, " set to");}, [isStartUpModal]);
+	useEffect(() => {
+		console.log(isStartUpModal, " set to");
+	}, [isStartUpModal]);
 
 	const setProjectName = (projectNameN) => {
 		localStorage.setItem("projectName", projectNameN);
@@ -115,35 +126,36 @@ const AppContext = ({ children }) => {
 	};
 
 	return (
-		<StartUpModalContext.Provider value={isStartUpModal}>
-			<UpdateStartUpModalContext.Provider value={setIsStartUpModal}>
-				<ProjectNameContext.Provider value={projectName}>
-					<UpdateProjectNameContext.Provider value={setProjectName}>
-						<ScreenshotsContext.Provider value={screenshots}>
-							<UpdateScreenshotsContext.Provider value={setScreenshots}>
-								<AnnotationsContext.Provider value={annotations}>
-									<UpdateAnnotationsContext.Provider value={setAnnotations}>
-										<ToolContext.Provider value={tool}>
-											<UpdateToolContext.Provider value={setTool}>
-												<VideoPathContext.Provider value={videoPath}>
-													<UpdateVideoPathContext.Provider value={setVideoPath}>
-														<StartUpModal
-															isOpen={isStartUpModal}
-															createNewProject={createNewProject}
-														/>
-														<div className="container">{children}</div>
-													</UpdateVideoPathContext.Provider>
-												</VideoPathContext.Provider>
-											</UpdateToolContext.Provider>
-										</ToolContext.Provider>
-									</UpdateAnnotationsContext.Provider>
-								</AnnotationsContext.Provider>
-							</UpdateScreenshotsContext.Provider>
-						</ScreenshotsContext.Provider>
-					</UpdateProjectNameContext.Provider>
-				</ProjectNameContext.Provider>
-			</UpdateStartUpModalContext.Provider>
-		</StartUpModalContext.Provider>
+		<JumpToTimeContext.Provider value={jumpToTime}>
+			<UpdateJumpToTimeContext.Provider value={setJumpToTime}>
+				<StartUpModalContext.Provider value={isStartUpModal}>
+					<UpdateStartUpModalContext.Provider value={setIsStartUpModal}>
+						<ProjectNameContext.Provider value={projectName}>
+							<UpdateProjectNameContext.Provider value={setProjectName}>
+								<ScreenshotsContext.Provider value={screenshots}>
+									<UpdateScreenshotsContext.Provider value={setScreenshots}>
+										<AnnotationsContext.Provider value={annotations}>
+											<UpdateAnnotationsContext.Provider value={setAnnotations}>
+												<ToolContext.Provider value={tool}>
+													<UpdateToolContext.Provider value={setTool}>
+														<VideoPathContext.Provider value={videoPath}>
+															<UpdateVideoPathContext.Provider value={setVideoPath}>
+																<StartUpModal isOpen={isStartUpModal} createNewProject={createNewProject} />
+																<div className="container">{children}</div>
+															</UpdateVideoPathContext.Provider>
+														</VideoPathContext.Provider>
+													</UpdateToolContext.Provider>
+												</ToolContext.Provider>
+											</UpdateAnnotationsContext.Provider>
+										</AnnotationsContext.Provider>
+									</UpdateScreenshotsContext.Provider>
+								</ScreenshotsContext.Provider>
+							</UpdateProjectNameContext.Provider>
+						</ProjectNameContext.Provider>
+					</UpdateStartUpModalContext.Provider>
+				</StartUpModalContext.Provider>
+			</UpdateJumpToTimeContext.Provider>
+		</JumpToTimeContext.Provider>
 	);
 };
 

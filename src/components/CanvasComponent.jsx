@@ -2,7 +2,7 @@ import React from "react" ;
 import { useState, useRef, useEffect } from "react";
 import Scrubber from "./Scrubber.jsx";
 import "../styles/Canvas.css";
-import { useAnnotations, useTool, useVideoPath, useScreenshots } from "./AppContext";
+import { useAnnotations, useTool, useVideoPath, useScreenshots, useJumpToTime } from "./AppContext";
 import ToolBar from "./ToolBar";
 
 function sleep(ms) {
@@ -16,6 +16,9 @@ const CanvasComponent = () => {
 	const [videoSrcG] = useVideoPath();
 	const [videoSrc, setVideoSrc] = useState();
 	const [currentVideoPercent, setCurrentVideoPercent] = useState(0);
+	const [jumpToTime, setJumpToTime] = useJumpToTime(0);
+	const [lastTimeChange, setLastTimeChange] = useState(-2);
+	const [ready, setReady] = useState(false);
 
 	// At what radius to the beginning of a polygon to close it.
 	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
@@ -58,8 +61,19 @@ const CanvasComponent = () => {
 		if (canvasWidth !== 0 && canvasHeight !== 0) {
 			resizeCanvas();
 			drawAnnotations();
+			console.log(videoElement.current.currentTime);
+			setReady(true);
 		}
 	}, [canvasWidth, canvasHeight]);
+
+	useEffect(() => {
+		console.log(jumpToTime);
+		if (jumpToTime !== -1 && ready) {
+			console.log(jumpToTime);
+			gotoTime(jumpToTime);
+			setJumpToTime(-1);
+		}
+	}, [jumpToTime]);
 
 	// Create refs to access video and canvas elements.
 	const videoElement = useRef(null);
@@ -83,12 +97,16 @@ const CanvasComponent = () => {
 		const totalTime = videoElement.current.duration;
 		const currentPercent = (videoElement.current.currentTime/totalTime)*100;
 		setCurrentVideoPercent(currentPercent);
+		drawAnnotations()
 	}
 
 	// Function to seek to a specific time stamp
 	const gotoTime = (time) => {
-		videoElement.current.currentTime = time;
-		drawAnnotations();
+		if (time !== null) {
+			console.log(time);
+			videoElement.current.currentTime = time;
+			drawAnnotations();
+		}
 	};
 
 	// Function to seek to a specific percent of the video.
