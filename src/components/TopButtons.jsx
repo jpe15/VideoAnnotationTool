@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useScreenshots } from "./AppContext";
 import { useStartUpModal, useVideoPath } from "./AppContext";
 import { useAnnotations } from "./AppContext";
 const electron = window.require("electron");
@@ -26,14 +27,17 @@ const Button = styled.button`
 
 const TopButtons = ({ projName }) => {
 
-	const [, setVideoPath] = useVideoPath();
+	const [videoPath, setVideoPath] = useVideoPath();
 	const [annotations] = useAnnotations();
+	const [screenshots] = useScreenshots();
 	const [isStartUpModal, setIsStartUpModal] = useStartUpModal();
 
 	const sendExport = () => {
 		const args = {
 			projName: projName,
+			videoPath: videoPath,
 			data: annotations,
+			metadata: screenshots,
 		};
 
 		electron.ipcRenderer.send("export", args);

@@ -1,11 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
-
-const path = require('path')
 const isDev = require('electron-is-dev')
-
 const exportData = require('./export')
-
 require('@electron/remote/main').initialize()
+
+const fs = require('fs');
+const path = require('path');
 
 let win = null
 
@@ -46,10 +45,11 @@ app.on('activate', function () {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
+//THIS IPC_MAIN function is reponsible for exporting JSON file
 // Receives communications from export button, through 'export' channel
 // args = { projName: string, data: object }
 ipcMain.on('export', (event, args) => {
-  exportData(args.projName, args.data)
+  exportData(args.projName, args.data, args.metadata, args.videoPath)
   .then(res => {
     win.send('exported', res)
   })
