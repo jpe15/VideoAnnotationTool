@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useVideoPath } from "./AppContext";
+import { useStartUpModal, useVideoPath } from "./AppContext";
 import { useAnnotations } from "./AppContext";
 const electron = window.require("electron");
 
@@ -24,14 +24,11 @@ const Button = styled.button`
 	}
 `;
 
-function uploadFile() {
-	document.getElementById("selectFile").click();
-}
-
 const TopButtons = ({ projName }) => {
 
 	const [, setVideoPath] = useVideoPath();
 	const [annotations] = useAnnotations();
+	const [isStartUpModal, setIsStartUpModal] = useStartUpModal();
 
 	const sendExport = () => {
 		const args = {
@@ -46,7 +43,7 @@ const TopButtons = ({ projName }) => {
 
 	return (
 		<>
-			<Button onClick={uploadFile.bind(this)}>New Project</Button>
+			<Button onClick={() => {setIsStartUpModal(true);}}>New Project</Button>
 			<Button>Import Project</Button>
 			<Button onClick={sendExport}>Export Project</Button>
 			<input id="selectFile" type={"file"} style={{ display: "none" }} onChange={(e) => {setVideoPath(e.target.files[0].path);}}></input>

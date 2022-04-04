@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Modal from "react-modal/lib/components/Modal";
 import "../styles/Modals.css";
-import { useProjectName, useVideoPath } from "./AppContext";
+import { useProjectName, useStartUpModal, useVideoPath } from "./AppContext";
 
 const customStyles = {
 	overlay: {
@@ -36,6 +36,7 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 	const [newProjName, setNewProjName] = useState("");
 	const [projectName, setProjectName] = useProjectName();
 	const [videoPath, setVideoPath] = useVideoPath();
+	const [isStartUpModal, setIsStartUpModal] = useStartUpModal();
 	
 	return (
 		<Modal style={customStyles} contentLabel="Start Modal" isOpen={isOpen}>
@@ -43,11 +44,12 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 				Create a New Project or Open an Existing One
 			</div>
 			<div className="modal__body">
+					{videoPath !== "" && <button onClick={() => {setIsStartUpModal(false); setIsNewProj(false);}}>Current Project</button>}
 				<div className="modal__body--newproj">
 					{!isNewProj && <button onClick={() => {setIsNewProj(true);}}>Create Project</button>}
 					{isNewProj && <input placeholder="Name your project" onChange={(e) => {setNewProjName(e.target.value)}}></input>}
 					{newProjName !== "" && isNewProj && <button onClick={() => {uploadFile();}}>Select Video</button>}
-					<input id="selectFileN" type={"file"} style={{ display: "none" }} onChange={(e) => {setProjectName(newProjName); setVideoPath(e.target.files[0].path);}}></input>
+					<input id="selectFileN" type={"file"} style={{ display: "none" }} onChange={(e) => {createNewProject(e.target.files[0].path, newProjName);}}></input>
 				</div>
 				<button onClick={() => {setIsNewProj(false);}}>Import Project</button>
 			</div>
