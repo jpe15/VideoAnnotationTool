@@ -26,10 +26,10 @@ const Button = styled.button`
 `;
 
 class AnnotatedFrame {
-	constructor(imageName, timeStamp, comment, annotations) {
+	constructor(imageName, timestamp, comment, annotations) {
 		this.metadata = {
 			imageName,
-			timeStamp,
+			timestamp,
 			comment
 		};
 		this.annotations = annotations;
@@ -40,8 +40,8 @@ const TopButtons = () => {
 
 	const [videoPath, setVideoPath] = useVideoPath();
 	const [annotations] = useAnnotations();
-	const [screenshots] = useScreenshots();
-	const [isStartUpModal, setIsStartUpModal] = useStartUpModal();
+	const [screenshots, setScreenshots] = useScreenshots();
+	const [, setIsStartUpModal] = useStartUpModal();
 	const [projName] = useProjectName();
 
 	// Handle video upload.
@@ -55,16 +55,16 @@ const TopButtons = () => {
 		// addAnnotationsToOutput();
 
 		let annotatedFrames = [];
-		console.log('Screenshots: ', screenshots);
 
 		// Get keys of screenshots array, then add Blob of each screenshot to images folder.
 		let keys = Object.keys(screenshots);
+
 		for(let i = 0; i < keys.length; i++) {
 			let timestr = keys[i];
 			
 			// Parse float from timestamp string, and use the time for the image name.
 			let timestamp = parseFloat(timestr);
-			let imageName = `time_${timestamp}.png`;
+			let imageName = `${projName}_${timestamp}.png`;
 
 			// Filter annotations to only include annotations for this timestamp.
 			let frameAnnotations = annotations.filter(annotation => annotation.timestamp === timestamp);
@@ -72,7 +72,6 @@ const TopButtons = () => {
 			
 			// Push new annotatedFrame object to array of frames to be added to zip file.
 			let frame = new AnnotatedFrame(imageName, timestamp, comment, frameAnnotations);
-			console.log(frame);
 			annotatedFrames.push(frame);
 		}
 
@@ -86,14 +85,21 @@ const TopButtons = () => {
 
 		// Send to backend
 		electron.ipcRenderer.send("export", args);
-		electron.ipcRenderer.once("exported", (e, ret) => {});
+		electron.ipcRenderer.once("exported", (e, ret) => {
+			let newScreenshots = {};
+						
+			for(let i = 0; i < ret.imageNames.length; i++) {
+				newScreenshots[ret.imageNames[i].timestamp] = ret.imageNames[i].name;
+			}
+
+			setScreenshots(newScreenshots);
+		});
 	}
 
 
 	return (
 		<>
-			<Button onClick={() => {setIsStartUpModal(true);}}>New Project</Button>
-			<Button>Import Project</Button>
+			<Button onClick={() => {setIsStartUpModal(true);}}>Open Project</Button>
 			<Button onClick={sendExport}>Export Project</Button>
 			<input id="selectFile" type={"file"} style={{ display: "none" }} onChange={(e) => uploadVideo(e)}></input>
 		</>
