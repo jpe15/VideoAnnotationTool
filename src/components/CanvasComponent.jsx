@@ -96,7 +96,6 @@ const CanvasComponent = () => {
 	// Function to seek to a specific time stamp
 	const gotoTime = (time) => {
 		if (time !== null) {
-			console.log(time);
 			videoElement.current.currentTime = time;
 			drawAnnotations();
 		}
@@ -288,7 +287,7 @@ const CanvasComponent = () => {
 			// If we don't then take one.
 			const screenshot = saveScreenshot();
 			let oldScreenshots = screenshots;
-			oldScreenshots[videoElement.current.currentTime] = screenshot;
+			oldScreenshots[videoElement.current.currentTime] = {screenshot: screenshot, imageName: ""};
 			setScreenshots(oldScreenshots);
 		}
 
@@ -419,7 +418,7 @@ const CanvasComponent = () => {
 				// If we don't then take one.
 				const screenshot = saveScreenshot();
 				let oldScreenshots = screenshots;
-				oldScreenshots[videoElement.current.currentTime] = screenshot;
+				oldScreenshots[videoElement.current.currentTime] = {screenshot: screenshot, imageName: ""};
 				setScreenshots(oldScreenshots);
 			}
 

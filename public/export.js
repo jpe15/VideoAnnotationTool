@@ -3,16 +3,16 @@ const path = require('path')
 const fs = require('fs')
 
 async function exportData(projName, videoPath, annotatedFrames, images) {
-
-    console.log('Annotated frames: ', annotatedFrames);
     
     // Using an array for when PNG exporting is added.
     let filesExported = []
+    let expImages = [];
     let directory = ''
     
     let options = {
         title: "Select folder to export to",
         buttonLabel: "Export",
+        defaultPath: projName,
         properties: ['openDirectory']
     }
 
@@ -22,7 +22,7 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
     if(res.canceled){
         return {
             value: 1,
-            files: filesExported,
+            imageNames: expImages,
             folder: directory
         }
     }
@@ -60,26 +60,37 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
         let keys = Object.keys(images);
         for(let key of keys){
 
-            // strip off the data: url prefix to get just the base64-encoded bytes
-            const img = images[key];
-            const data = img.replace(/^data:image\/\w+;base64,/, "");
-            const buf = Buffer.from(data, "base64");
-            fs.writeFile(path.resolve(directory, `${projName}_${key}.png`), buf, (err) => {
-                //error handling
-                if (err){
-                    console.error(err);
-                    throw err;
-                }
-                else{
-                    filesExported.push(filename)
-                }
-            });
+            let name = `${projName}_${key}.png`;
+            let newImage = {
+                "name": name,
+                "timestamp": key
+            }
+            expImages.push(newImage);
+            
+
+            if(!fs.existsSync(path.resolve(directory, name))){
+                // strip off the data: url prefix to get just the base64-encoded bytes
+                const img = images[key];
+                const data = img.screenshot.replace(/^data:image\/\w+;base64,/, "");
+                const buf = Buffer.from(data, "base64");
+                fs.writeFile(path.resolve(directory, `${projName}_${key}.png`), buf, (err) => {
+                    //error handling
+                    if (err){
+                        console.error(err);
+                        throw err;
+                    }
+                    else{
+                        filesExported.push(filename);
+                    }
+                });
+            }
+
         }
 
         //success
         return {
             value: 0,
-            files: filesExported,
+            imageNames: expImages,
             folder: directory
         }
 
@@ -88,7 +99,7 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
         console.error(err)
         return {
             value: -1,
-            files: filesExported,
+            imageNames: expImages,
             folder: directory
         }
 

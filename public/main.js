@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, ipcRenderer } = require('electron')
 const isDev = require('electron-is-dev')
 const exportData = require('./export')
 require('@electron/remote/main').initialize()
@@ -55,7 +55,6 @@ app.on('activate', function () {
 ipcMain.on('export', (event, args) => {
   exportData(args.projName, args.videoPath, args.annotatedFrames, args.images)
   .then(res => {
-    console.log('exported', res)
     win.send('exported', res)
   })
   .catch(err => {
@@ -66,8 +65,9 @@ ipcMain.on('export', (event, args) => {
 // Receives communications when no more annotations on a given timestamp.
 // So the image corresponding to that timestamp can be deleted.
 // imagePath: string
-ipcMain.on('delete-image', (event, imagePath) => {
-  fs.unlink(imagePath, (err) => {
+// args: { projPath, imageToDelete }
+ipcMain.on('delete-image', (event, {projPath, imageToDelete}) => {
+  fs.unlink(path.resolve(projPath, imageToDelete), (err) => {
     if (err) {
       console.error(err);
       throw err;
