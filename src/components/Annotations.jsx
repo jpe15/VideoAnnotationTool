@@ -47,7 +47,7 @@ const Annotations = ({ annotation, index }) => {
       let imageToDelete;
 
       for (let i = 0; i < Object.keys(screenshots).length; i++) {
-        let xyz = screenshots[Object.keys(screenshots)[i]];
+        imageToDelete = screenshots[Object.keys(screenshots)[i]];
 
         if (Object.keys(screenshots)[i] == currentTimestamp) {
           let oldScreenshots = screenshots;
@@ -58,7 +58,6 @@ const Annotations = ({ annotation, index }) => {
           }
 
           setScreenshots(oldScreenshots);
-          imageToDelete = xyz["imageName"];
           break;
         }
       }

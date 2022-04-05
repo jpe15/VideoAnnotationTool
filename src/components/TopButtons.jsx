@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useProjectName, useScreenshots } from "./AppContext";
-import { useStartUpModal, useVideoPath } from "./AppContext";
+import { useStartUpModal, useVideoPath, useProjPath } from "./AppContext";
 import { useAnnotations } from "./AppContext";
 const electron = window.require("electron");
 
@@ -43,6 +43,7 @@ const TopButtons = () => {
 	const [screenshots, setScreenshots] = useScreenshots();
 	const [, setIsStartUpModal] = useStartUpModal();
 	const [projName] = useProjectName();
+	const [, setProjPath] = useProjPath();
 
 	// Handle video upload.
 	async function uploadVideo(e) {
@@ -92,6 +93,7 @@ const TopButtons = () => {
 				newScreenshots[ret.imageNames[i].timestamp] = ret.imageNames[i].name;
 			}
 
+			setProjPath(ret.folder);
 			setScreenshots(newScreenshots);
 		});
 	}
