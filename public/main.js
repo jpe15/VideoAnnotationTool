@@ -67,8 +67,6 @@ ipcMain.on('export', (event, args) => {
 // imagePath: string
 // args: { projPath, imageToDelete }
 ipcMain.on('delete-image', (event, {projPath, imageToDelete}) => {
-  console.log('projPath: ', projPath);
-  console.log('imageToDelete: ', imageToDelete);
 
   try {
     fs.unlink(path.resolve(projPath, imageToDelete), (err) => {

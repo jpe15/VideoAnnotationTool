@@ -87,10 +87,10 @@ const TopButtons = () => {
 		// Send to backend
 		electron.ipcRenderer.send("export", args);
 		electron.ipcRenderer.once("exported", (e, ret) => {
-			let newScreenshots = {};
+			let newScreenshots = screenshots;
 						
-			for(let i = 0; i < ret.imageNames.length; i++) {
-				newScreenshots[ret.imageNames[i].timestamp] = ret.imageNames[i].name;
+			for(let i = 0; i < ret.images.length; i++) {
+				newScreenshots[ret.images[i].timestamp]["imageName"] = ret.images[i].name;
 			}
 
 			setProjPath(ret.folder);
