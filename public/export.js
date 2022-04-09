@@ -122,6 +122,8 @@ async function exportProjImages(projName, images, dir){
 
         expImages.push(newImage);
     }
+
+    return expImages;
 }
 
 module.exports = exportData
