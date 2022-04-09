@@ -28,12 +28,7 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
     }
 
     try {
-
-        directory = res.filePath
-        let parts = directory.split('\\')
-        let filename = parts[parts.length - 1]
-
-        directory = directory.replace(filename, '')
+        directory = path.dirname(res.filePath)
 
         let outline = {
 			'projectName': projName,
@@ -52,7 +47,7 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
             }
             else{
                 //managing the data in array
-                filesExported.push(filename)
+                filesExported.push(`${projName}.json`)
             }
         });
 
@@ -80,7 +75,7 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
                         throw err;
                     }
                     else{
-                        filesExported.push(filename);
+                        filesExported.push(`${projName}_${key}.png`);
                     }
                 });
             }
