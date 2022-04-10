@@ -284,8 +284,8 @@ const CanvasComponent = () => {
 		newAnnotation["type"] = "POLYGON";
 		newAnnotation["points"] = currentPoints;
 		newAnnotation["timestamp"] = videoElement.current.currentTime;
-		newAnnotation["label"] = ``;
-		newAnnotation["comment"] = "Placeholder comment";
+		newAnnotation["label"] = "";
+		newAnnotation["comment"] = "";
 		newAnnotation["selected"] = false;
 
 		setAnnotations([...annotations, newAnnotation]);
@@ -414,9 +414,9 @@ const CanvasComponent = () => {
 			// newAnnotation["end"] = [xPercent, yPercent];
 		
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
-			newAnnotation["label"] = ``;
+			newAnnotation["label"] = "";
 			newAnnotation["points"]=[[initialX,initialY],[xPercent,yPercent]];
-			newAnnotation["comment"] = "Placeholder comment";
+			newAnnotation["comment"] = "";
 			newAnnotation["selected"] = false;
 
 			setAnnotations([...annotations, newAnnotation]);
