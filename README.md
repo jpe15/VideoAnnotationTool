@@ -1,5 +1,9 @@
 # VideoAnnotationTool
 
+## Update Pre-existing Labels
+in src/components/AnnotationsBar.jsx, update the CUSTOM_LABELS array on line 12. 
+Add comma separated strings like the examples given.
+
 ## Developement Build Instructions
 1. Install [Nodejs](https://nodejs.org/en/) LTS version
 2. `npm install` -> in the root of the project directory.
