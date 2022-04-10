@@ -102,7 +102,7 @@ const Annotations = ({ annotation, index, existingLabels }) => {
 					marginBottom: "0.5rem",
 				}}
 			>
-				{annotation?.type}
+				{annotation?.type} {index}
 			</p>
 			<h4 style={{ color: "black", margin: "0" }}>
 				<textarea rows="5" value={annotation?.comment} onChange={(e) => updateComment(e.target.value)}></textarea>

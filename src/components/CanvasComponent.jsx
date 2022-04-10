@@ -197,6 +197,7 @@ const CanvasComponent = () => {
 		// Clear display canvas.
 		displayContext.clearRect(0, 0, drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
 		// Go over each annotation
+		let count = 0;
 		for (const annotation of annotations) {
 			if (annotation.selected) {
 				displayContext.strokeStyle = "blue";
@@ -215,6 +216,8 @@ const CanvasComponent = () => {
 				const [endX, endY] = percentToCanvasPixels(annotation["points"][1][0], annotation["points"][1][1]);
 				// Draw it on the display canvas.
 				displayContext.strokeRect(startX, startY, endX - startX, endY - startY);
+				displayContext.font = "14px Arial";
+				displayContext.fillText(annotations.indexOf(annotation), startX, startY - 10);
 		
 			}
 			if (annotation.type == "POLYGON") {
@@ -251,7 +254,12 @@ const CanvasComponent = () => {
 				displayContext.moveTo(lastX, lastY);
 				displayContext.lineTo(startX, startY);
 				displayContext.stroke();
+				displayContext.font = "14px Arial";
+				let [x, y] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1])
+				console.log(x, y - 5);
+				displayContext.fillText(annotations.indexOf(annotation), x, y - 10);
 			}
+			count++;
 		}
 	};
 
