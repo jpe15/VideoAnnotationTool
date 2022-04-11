@@ -61,6 +61,7 @@ const Annotations = ({ annotation, index, existingLabels }) => {
 				projPath: projPath,
 				imageToDelete: imageToDelete,
 			};
+			console.log(args);
 			electron.ipcRenderer.send("delete-image", args);
 		}
 	};
@@ -105,7 +106,7 @@ const Annotations = ({ annotation, index, existingLabels }) => {
 				{annotation?.type} {index}
 			</p>
 			<h4 style={{ color: "black", margin: "0" }}>
-				<textarea rows="5" value={annotation?.comment} onChange={(e) => updateComment(e.target.value)}></textarea>
+				<textarea placeholder="Comment here..." rows="5" value={annotation?.comment} onChange={(e) => updateComment(e.target.value)}></textarea>
 			</h4>
 			<div className="card__button-holder">
 				<button className="card_delAnnotations" onClick={() => deleteAnnotations(index)}>

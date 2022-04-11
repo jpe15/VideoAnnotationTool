@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { useProjectName, useScreenshots } from "./AppContext";
+import { useExportModal, useProjectName, useScreenshots } from "./AppContext";
 import { useStartUpModal, useVideoPath, useProjPath } from "./AppContext";
 import { useAnnotations } from "./AppContext";
 const electron = window.require("electron");
+
 
 const Button = styled.button`
 	background-color: #0f62fe;
@@ -44,6 +45,7 @@ const TopButtons = () => {
 	const [, setIsStartUpModal] = useStartUpModal();
 	const [projName] = useProjectName();
 	const [, setProjPath] = useProjPath();
+	const [, setIsExportModal] = useExportModal();
 
 	// Handle video upload.
 	async function uploadVideo(e) {
@@ -102,7 +104,7 @@ const TopButtons = () => {
 	return (
 		<>
 			<Button onClick={() => {setIsStartUpModal(true);}}>Open Project</Button>
-			<Button onClick={sendExport}>Export Project</Button>
+			<Button onClick={() => {setIsExportModal(true);}}>Export Project</Button>
 			<input id="selectFile" type={"file"} style={{ display: "none" }} onChange={(e) => uploadVideo(e)}></input>
 		</>
 	);
