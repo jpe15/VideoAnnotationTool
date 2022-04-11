@@ -69,7 +69,7 @@ ipcMain.on('export', (event, args) => {
 ipcMain.on('delete-image', (event, {projPath, imageToDelete}) => {
 
   try {
-    fs.unlink(path.resolve(projPath, imageToDelete), (err) => {
+    fs.unlink(path.resolve(projPath, imageToDelete.imageName), (err) => {
       if (err) {
         console.error(err);
       }
@@ -79,7 +79,6 @@ ipcMain.on('delete-image', (event, {projPath, imageToDelete}) => {
     });
   }
   catch(err) {
-    console.log('Booboo');
     console.error(err);
   }
 })

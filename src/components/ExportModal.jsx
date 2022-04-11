@@ -1,0 +1,177 @@
+import React, { useState } from "react";
+import Modal from "react-modal/lib/components/Modal";
+import "../styles/Modals.css";
+import { useProjectName, useExportModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
+const electron = window.require("electron");
+
+class AnnotatedFrame {
+	constructor(imageName, timestamp, comment, annotations) {
+		this.metadata = {
+			imageName,
+			timestamp,
+			comment,
+		};
+		this.annotations = annotations;
+	}
+}
+
+const customStyles = {
+	overlay: {
+		zIndex: "17",
+	},
+	content: {
+		top: "50%",
+		left: "50%",
+		right: "auto",
+		bottom: "auto",
+		marginRight: "-50%",
+		transform: "translate(-50%, -50%)",
+		borderLeft: "0.5em solid #0f62fe",
+		padding: "0",
+		margin: "0",
+		width: "75vw",
+		height: "75vh",
+		boxShadow: "1px 1px 6px 0px #0008",
+		backgroundColor: "#f2f4f8",
+	},
+};
+
+Modal.setAppElement("#root");
+
+const ExportModal = ({ isOpen, createNewProject }) => {
+	const [isNewProj, setIsNewProj] = useState(false);
+	const [newProjName, setNewProjName] = useState("");
+	const [projName, setProjectName] = useProjectName();
+	const [projPath] = useProjPath();
+	const [videoPath, setVideoPath] = useVideoPath();
+	const [, setIsExportModal] = useExportModal();
+	const [, setProjPath] = useProjPath();
+	const [screenshots, setScreenshots] = useScreenshots();
+	const [annotations, setAnnotations] = useAnnotations();
+	const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0);
+	const [frameComments, setFrameComments] = useFrameComments();
+
+	// Load metadata, annotations, and screenshots into zip file then download.
+	function sendExport() {
+		// addAnnotationsToOutput();
+
+		let annotatedFrames = [];
+
+		// Get keys of screenshots array, then add Blob of each screenshot to images folder.
+		let keys = Object.keys(screenshots);
+
+		for (let i = 0; i < keys.length; i++) {
+			let timestr = keys[i];
+
+			// Parse float from timestamp string, and use the time for the image name.
+			let timestamp = parseFloat(timestr);
+			let imageName = `${projName}_${timestamp}.png`;
+
+			// Filter annotations to only include annotations for this timestamp.
+			let frameAnnotations = annotations.filter((annotation) => annotation.timestamp === timestamp);
+
+			// get rid of timestamp and selected
+			for (let key in frameAnnotations) {
+				delete frameAnnotations[key].selected;
+				delete frameAnnotations[key].timestamp;
+				if (frameAnnotations[key].comment == "") {
+					frameAnnotations[key].comment = null;
+				}
+
+				if (frameAnnotations[key].label == "") {
+					frameAnnotations[key].label = null;
+				}
+			}
+
+			let newcomment = null;
+			if (frameComments[timestr]) {
+				newcomment = frameComments[timestr];
+			}
+
+
+			// Push new annotatedFrame object to array of frames to be added to zip file.
+			let frame = new AnnotatedFrame(imageName, timestamp, newcomment, frameAnnotations);
+			annotatedFrames.push(frame);
+		}
+
+		// Data to pass to backend.
+		const args = {
+			projName: projName,
+			videoPath: videoPath,
+			annotatedFrames: annotatedFrames,
+			images: screenshots
+		};
+
+		// Send to backend
+		electron.ipcRenderer.send("export", args);
+		electron.ipcRenderer.once("exported", (e, ret) => {
+			if (ret.value != 1) {	
+				let newScreenshots = {};
+				console.log(ret);
+				for (let i = 0; i < ret.imageNames.length; i++) {
+					newScreenshots[ret.imageNames[i].timestamp] = {"imageName":ret.imageNames[i].name};
+					//console.log(newScreenshots[ret.imageNames[i].timestamp]);
+				}
+	
+				setProjPath(ret.folder);
+				setScreenshots(newScreenshots);
+			}
+		});
+
+		setIsExportModal();
+	}
+
+	const advanceScreenshot = (num, len) => {
+		if (num == 1) {
+			console.log(currentScreenshotIndex, len);
+			if (currentScreenshotIndex < len - 1) {
+				setCurrentScreenshotIndex(currentScreenshotIndex + 1);
+			}
+		} else {
+			if (currentScreenshotIndex > 0) {
+				setCurrentScreenshotIndex(currentScreenshotIndex - 1);
+			}
+		}
+	};
+
+	const updateComment = (comment) => {
+		let keys = Object.keys(screenshots);
+		console.log(keys);
+		let currKey = keys[currentScreenshotIndex];
+		console.log(currKey);
+		let curr = frameComments;
+		curr[currKey] = comment;
+		setFrameComments(curr);
+	}
+
+	const getImages = () => {
+		let keys = Object.keys(screenshots);
+		for (let idx in screenshots) {
+			if (currentScreenshotIndex == keys.indexOf(idx)) {
+				if (screenshots[idx].imageName === "") {
+					return <img src={screenshots[idx].screenshot}></img>;
+				} else {
+					console.log(`${projPath}${screenshots[idx].imageName}`);
+					return <img src={`${projPath}${screenshots[idx].imageName}`}></img>;
+				}
+			}
+		}
+	};
+
+	return (
+		<Modal style={customStyles} contentLabel="Start Modal" isOpen={isOpen}>
+			<div className="modal__title">Optionally add comments to each of the frames</div>
+			<div className="modal__body--images">
+				{getImages()}
+				<input type="text" className="modal__body--images--textarea" value={frameComments[Object.keys(frameComments)[currentScreenshotIndex]]}  placeholder="Comment here..." onChange={(e) => updateComment(e.target.value)}></input>
+			</div>
+			<div className="export-modal__footer">
+				<button className="modal__button" onClick={() => advanceScreenshot(-1, Object.keys(screenshots).length)}>previous image</button>
+				<button className="modal__button" onClick={() => advanceScreenshot(1, Object.keys(screenshots).length)}>next image</button>
+				<button className="modal__button" onClick={() => {sendExport();}}>Export</button>
+			</div>
+		</Modal>
+	);
+};
+
+export default ExportModal;

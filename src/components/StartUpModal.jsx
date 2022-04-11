@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import Modal from "react-modal/lib/components/Modal";
 import "../styles/Modals.css";
-import { useProjectName, useStartUpModal, useVideoPath, useProjPath, useScreenshots, useAnnotations } from "./AppContext";
+import { useProjectName, useStartUpModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
 
 
 const customStyles = {
@@ -45,6 +45,7 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 	const [, setProjPath] = useProjPath();
 	const [, setScreenshots] = useScreenshots();
 	const [, setAnnotations] = useAnnotations();
+	const [, setFrameComments] = useFrameComments();
 
 	const uploadJSON = (e) => {
 		const file = e.target.files[0];
@@ -57,12 +58,31 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 
 			let newAnnotations = [];
 			let newScreenshots = {};
+			let comments = {};
 			for(let frame of data.annotatedFrames) {
 				let timestamp = frame.metadata.timestamp;
-
+				console.log(frame);
+				if (frame.metadata.comment != null) {
+					
+					comments[timestamp] = frame.metadata.comment;
+				} else {
+					comments[timestamp] = "";
+				}
 				let temp = [];
 
 				for(let anno of frame.annotations) {
+					// adding back in the neccessary additional info
+					anno.timestamp = timestamp;
+					anno.selected = false;
+
+					if (anno.label == null) {
+						anno.label = "";
+					}
+
+					if (anno.comment == null) {
+						anno.comment = "";
+					}
+
 					temp.push(anno);
 				}
 
@@ -77,6 +97,7 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 
 			setAnnotations(newAnnotations);
 			setScreenshots(newScreenshots);
+			setFrameComments(comments);
 		};
 		reader.readAsText(file);
 	}
