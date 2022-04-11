@@ -2,7 +2,7 @@ import React from "react" ;
 import { useState, useRef, useEffect } from "react";
 import Scrubber from "./Scrubber.jsx";
 import "../styles/Canvas.css";
-import { useAnnotations, useTool, useVideoPath, useScreenshots, useJumpToTime } from "./AppContext";
+import { useAnnotations, useTool, useVideoPath, useScreenshots, useJumpToTime, useCurrentTime } from "./AppContext";
 import ToolBar from "./ToolBar";
 
 const CanvasComponent = () => {
@@ -15,6 +15,7 @@ const CanvasComponent = () => {
 	const [jumpToTime, setJumpToTime] = useJumpToTime(0);
 	const [lastTimeChange, setLastTimeChange] = useState(-2);
 	const [ready, setReady] = useState(false);
+	const [currentTime, setCurrentTime] = useCurrentTime();
 
 	// At what radius to the beginning of a polygon to close it.
 	// NOTE: This is in proportion to video size. E.g. 1 = whole video, 0 = none
@@ -55,6 +56,7 @@ const CanvasComponent = () => {
 
 	useEffect(() => {
 		if (canvasWidth !== 0 && canvasHeight !== 0) {
+			gotoTime(currentTime);
 			resizeCanvas();
 			drawAnnotations();
 			setReady(true);
@@ -90,6 +92,7 @@ const CanvasComponent = () => {
 		const totalTime = videoElement.current.duration;
 		const currentPercent = (videoElement.current.currentTime/totalTime)*100;
 		setCurrentVideoPercent(currentPercent);
+		setCurrentTime(videoElement.current.currentTime);
 		drawAnnotations()
 	}
 
@@ -97,6 +100,7 @@ const CanvasComponent = () => {
 	const gotoTime = (time) => {
 		if (time !== null) {
 			videoElement.current.currentTime = time;
+			setCurrentTime(videoElement.current.currentTime);
 			drawAnnotations();
 		}
 	};

@@ -23,6 +23,14 @@ const JumpToTimeContext = createContext();
 const UpdateJumpToTimeContext = createContext();
 const FrameCommentContext = createContext();
 const UpdateFrameCommentContext = createContext();
+const CurrentTimeContext = createContext();
+const UpdateCurrentTimeContext = createContext();
+
+export const useCurrentTime = () => {
+	const currentTime = useContext(CurrentTimeContext);
+	const setCurrentTime = useContext(UpdateCurrentTimeContext);
+	return [currentTime, setCurrentTime];
+};
 
 export const useFrameComments = () => {
 	const frameComments = useContext(FrameCommentContext);
@@ -94,6 +102,7 @@ const AppContext = ({ children }) => {
 	const [isStartUpModal, setIsStartUpModal] = useState(true);
 	const [projectName, setProjectNameS] = useState("");
 	const [jumpToTime, setJumpToTime] = useState(0);
+	const [currentTime, setCurrentTimeS] = useState(0);
 	const [isExportModal, setIsExportModal] = useState(false);
 
 	useEffect(() => {
@@ -104,10 +113,14 @@ const AppContext = ({ children }) => {
 			setAnnotationsS(JSON.parse(localStorage.getItem("annotations")));
 			setToolS(localStorage.getItem("tool"));
 			setScreenshotsS(JSON.parse(localStorage.getItem("screenshots")));
-      console.log(localStorage.getItem("frameComments"));
-      if (localStorage.getItem("frameComments")) {
-        setFrameCommentsS(JSON.parse(localStorage.getItem("frameComments")));
-      }
+			if (localStorage.getItem("frameComments")) {
+				setFrameCommentsS(JSON.parse(localStorage.getItem("frameComments")));
+			}
+			if (localStorage.getItem("currentTime")) {
+				setCurrentTimeS(localStorage.getItem("currentTime"));
+			} else {
+				setCurrentTimeS(0);
+			}
 			setIsStartUpModal(false);
 			setIsExportModal(false);
 		} else {
@@ -123,6 +136,11 @@ const AppContext = ({ children }) => {
 
 	useEffect(() => {}, [isStartUpModal]);
 
+	const setCurrentTime = (time) => {
+		localStorage.setItem("currentTime", time);
+		setCurrentTimeS(time);
+	};
+
 	const setProjectName = (projectNameN) => {
 		localStorage.setItem("projectName", projectNameN);
 		setProjectNameS(projectNameN);
@@ -130,7 +148,7 @@ const AppContext = ({ children }) => {
 
 	const setFrameComments = (frameCommentsN) => {
 		localStorage.setItem("frameComments", JSON.stringify(frameCommentsN));
-    console.log("set frame comments in localStorage ", JSON.stringify(frameCommentsN));
+		console.log("set frame comments in localStorage ", JSON.stringify(frameCommentsN));
 		setFrameCommentsS(frameCommentsN);
 	};
 
@@ -172,52 +190,56 @@ const AppContext = ({ children }) => {
 	};
 
 	return (
-		<FrameCommentContext.Provider value={frameComments}>
-			<UpdateFrameCommentContext.Provider value={setFrameComments}>
-				<UpdateExportModalContext.Provider value={setIsExportModal}>
-					<ExportModalContext.Provider value={isExportModal}>
-						<UpdateProjPathContext.Provider value={setProjPath}>
-							<ProjPathContext.Provider value={projPath}>
-								<JumpToTimeContext.Provider value={jumpToTime}>
-									<UpdateJumpToTimeContext.Provider value={setJumpToTime}>
-										<StartUpModalContext.Provider value={isStartUpModal}>
-											<UpdateStartUpModalContext.Provider value={setIsStartUpModal}>
-												<ProjectNameContext.Provider value={projectName}>
-													<UpdateProjectNameContext.Provider value={setProjectName}>
-														<ScreenshotsContext.Provider value={screenshots}>
-															<UpdateScreenshotsContext.Provider value={setScreenshots}>
-																<AnnotationsContext.Provider value={annotations}>
-																	<UpdateAnnotationsContext.Provider value={setAnnotations}>
-																		<ToolContext.Provider value={tool}>
-																			<UpdateToolContext.Provider value={setTool}>
-																				<VideoPathContext.Provider value={videoPath}>
-																					<UpdateVideoPathContext.Provider value={setVideoPath}>
-																						<StartUpModal
-																							isOpen={isStartUpModal}
-																							createNewProject={createNewProject}
-																						/>
-																						<div className="container">{children}</div>
-																						<ExportModal isOpen={isExportModal}></ExportModal>
-																					</UpdateVideoPathContext.Provider>
-																				</VideoPathContext.Provider>
-																			</UpdateToolContext.Provider>
-																		</ToolContext.Provider>
-																	</UpdateAnnotationsContext.Provider>
-																</AnnotationsContext.Provider>
-															</UpdateScreenshotsContext.Provider>
-														</ScreenshotsContext.Provider>
-													</UpdateProjectNameContext.Provider>
-												</ProjectNameContext.Provider>
-											</UpdateStartUpModalContext.Provider>
-										</StartUpModalContext.Provider>
-									</UpdateJumpToTimeContext.Provider>
-								</JumpToTimeContext.Provider>
-							</ProjPathContext.Provider>
-						</UpdateProjPathContext.Provider>
-					</ExportModalContext.Provider>
-				</UpdateExportModalContext.Provider>
-			</UpdateFrameCommentContext.Provider>
-		</FrameCommentContext.Provider>
+		<CurrentTimeContext.Provider value={currentTime}>
+			<UpdateCurrentTimeContext.Provider value={setCurrentTime}>
+				<FrameCommentContext.Provider value={frameComments}>
+					<UpdateFrameCommentContext.Provider value={setFrameComments}>
+						<UpdateExportModalContext.Provider value={setIsExportModal}>
+							<ExportModalContext.Provider value={isExportModal}>
+								<UpdateProjPathContext.Provider value={setProjPath}>
+									<ProjPathContext.Provider value={projPath}>
+										<JumpToTimeContext.Provider value={jumpToTime}>
+											<UpdateJumpToTimeContext.Provider value={setJumpToTime}>
+												<StartUpModalContext.Provider value={isStartUpModal}>
+													<UpdateStartUpModalContext.Provider value={setIsStartUpModal}>
+														<ProjectNameContext.Provider value={projectName}>
+															<UpdateProjectNameContext.Provider value={setProjectName}>
+																<ScreenshotsContext.Provider value={screenshots}>
+																	<UpdateScreenshotsContext.Provider value={setScreenshots}>
+																		<AnnotationsContext.Provider value={annotations}>
+																			<UpdateAnnotationsContext.Provider value={setAnnotations}>
+																				<ToolContext.Provider value={tool}>
+																					<UpdateToolContext.Provider value={setTool}>
+																						<VideoPathContext.Provider value={videoPath}>
+																							<UpdateVideoPathContext.Provider value={setVideoPath}>
+																								<StartUpModal
+																									isOpen={isStartUpModal}
+																									createNewProject={createNewProject}
+																								/>
+																								<div className="container">{children}</div>
+																								<ExportModal isOpen={isExportModal}></ExportModal>
+																							</UpdateVideoPathContext.Provider>
+																						</VideoPathContext.Provider>
+																					</UpdateToolContext.Provider>
+																				</ToolContext.Provider>
+																			</UpdateAnnotationsContext.Provider>
+																		</AnnotationsContext.Provider>
+																	</UpdateScreenshotsContext.Provider>
+																</ScreenshotsContext.Provider>
+															</UpdateProjectNameContext.Provider>
+														</ProjectNameContext.Provider>
+													</UpdateStartUpModalContext.Provider>
+												</StartUpModalContext.Provider>
+											</UpdateJumpToTimeContext.Provider>
+										</JumpToTimeContext.Provider>
+									</ProjPathContext.Provider>
+								</UpdateProjPathContext.Provider>
+							</ExportModalContext.Provider>
+						</UpdateExportModalContext.Provider>
+					</UpdateFrameCommentContext.Provider>
+				</FrameCommentContext.Provider>
+			</UpdateCurrentTimeContext.Provider>
+		</CurrentTimeContext.Provider>
 	);
 };
 
