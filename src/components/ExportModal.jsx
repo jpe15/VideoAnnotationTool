@@ -153,7 +153,7 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 				if (screenshots[idx].imageName === "") {
 					return <img src={screenshots[idx].screenshot}></img>;
 				} else {
-					return <img src={`${projPath}/${screenshots[idx].imageName}`}></img>;
+					return <img src={`File://${projPath}/${screenshots[idx].imageName}`}></img>;
 				}
 			}
 		}
