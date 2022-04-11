@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Modal from "react-modal/lib/components/Modal";
 import "../styles/Modals.css";
 import { useProjectName, useExportModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
@@ -50,6 +50,9 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 	const [annotations, setAnnotations] = useAnnotations();
 	const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0);
 	const [frameComments, setFrameComments] = useFrameComments();
+	const [currentFrameComments, setCurrentFrameComments] = useState({});
+
+	const inputRef = useRef();
 
 	// Load metadata, annotations, and screenshots into zip file then download.
 	function sendExport() {
@@ -108,8 +111,8 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 			if (ret.value != 1) {	
 				let newScreenshots = {};
 				console.log(ret);
-				for (let i = 0; i < ret.imageNames.length; i++) {
-					newScreenshots[ret.imageNames[i].timestamp] = {"imageName":ret.imageNames[i].name};
+				for (let i = 0; i < ret.images.length; i++) {
+					newScreenshots[ret.images[i].timestamp] = {"imageName":ret.images[i].name};
 					//console.log(newScreenshots[ret.imageNames[i].timestamp]);
 				}
 	
@@ -123,7 +126,6 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 
 	const advanceScreenshot = (num, len) => {
 		if (num == 1) {
-			console.log(currentScreenshotIndex, len);
 			if (currentScreenshotIndex < len - 1) {
 				setCurrentScreenshotIndex(currentScreenshotIndex + 1);
 			}
@@ -132,13 +134,13 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 				setCurrentScreenshotIndex(currentScreenshotIndex - 1);
 			}
 		}
+		inputRef.current.value = "";
 	};
 
 	const updateComment = (comment) => {
 		let keys = Object.keys(screenshots);
-		console.log(keys);
 		let currKey = keys[currentScreenshotIndex];
-		console.log(currKey);
+		console.log("updating comment: ", comment);
 		let curr = frameComments;
 		curr[currKey] = comment;
 		setFrameComments(curr);
@@ -151,8 +153,7 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 				if (screenshots[idx].imageName === "") {
 					return <img src={screenshots[idx].screenshot}></img>;
 				} else {
-					console.log(`${projPath}${screenshots[idx].imageName}`);
-					return <img src={`${projPath}${screenshots[idx].imageName}`}></img>;
+					return <img src={`${projPath}/${screenshots[idx].imageName}`}></img>;
 				}
 			}
 		}
@@ -163,7 +164,8 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 			<div className="modal__title">Optionally add comments to each of the frames</div>
 			<div className="modal__body--images">
 				{getImages()}
-				<input type="text" className="modal__body--images--textarea" value={frameComments[Object.keys(frameComments)[currentScreenshotIndex]]}  placeholder="Comment here..." onChange={(e) => updateComment(e.target.value)}></input>
+				<input ref={inputRef} type="text" className="modal__body--images--textarea" placeholder="Comment here..." onBlur={(e) => updateComment(e.target.value)}></input>
+				{frameComments[Object.keys(frameComments)[currentScreenshotIndex]] && <div className="modal__body--p"><b>Existing comment: </b><p> {frameComments[Object.keys(frameComments)[currentScreenshotIndex]]}</p></div>}
 			</div>
 			<div className="export-modal__footer">
 				<button className="modal__button" onClick={() => advanceScreenshot(-1, Object.keys(screenshots).length)}>previous image</button>

@@ -89,7 +89,7 @@
 	padding: 1em;
 	/* border: red solid 1px; */
 	align-content: center;
-	margin-top: 2em;
+	margin-top: 1em;
 	display: flex;
 	justify-content: space-between;
 }
@@ -133,11 +133,27 @@ img {
 	font-family: Roboto, sans-serif;
 	resize: none;
 	padding: 0 0.5rem;
-	width: 50%;
+	width: 50% !important;
 	background-color: #c1c7cd;
 	outline: none;
 	border: none;
 	height: fit-content;
 	padding-top: 10px;
+}
+
+.modal__body--p {
+	display: flex;
+	flex-direction: row;
+	font-family: Roboto, sans-serif;
+	resize: none;
+	padding: 0 0.5rem;
+	width: 50% !important;
+	background-color: #c1c7cd;
+	outline: none;
+	border: none;
+	height: fit-content;
+	padding-top: 10px;
+	margin-bottom: 0;
+	align-items: center;
 }
 
