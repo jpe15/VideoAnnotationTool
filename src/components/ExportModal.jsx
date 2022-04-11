@@ -107,10 +107,10 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 		electron.ipcRenderer.once("exported", (e, ret) => {
 			if (ret.value != 1) {	
 				let newScreenshots = {};
-	
+				console.log(ret);
 				for (let i = 0; i < ret.imageNames.length; i++) {
 					newScreenshots[ret.imageNames[i].timestamp] = {"imageName":ret.imageNames[i].name};
-					console.log(newScreenshots[ret.imageNames[i].timestamp]);
+					//console.log(newScreenshots[ret.imageNames[i].timestamp]);
 				}
 	
 				setProjPath(ret.folder);
@@ -163,7 +163,7 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 			<div className="modal__title">Optionally add comments to each of the frames</div>
 			<div className="modal__body--images">
 				{getImages()}
-				<input type="text" className="modal__body--images--textarea"  placeholder="Comment here..." onChange={(e) => updateComment(e.target.value)}></input>
+				<input type="text" className="modal__body--images--textarea" value={frameComments[Object.keys(frameComments)[currentScreenshotIndex]]}  placeholder="Comment here..." onChange={(e) => updateComment(e.target.value)}></input>
 			</div>
 			<div className="export-modal__footer">
 				<button className="modal__button" onClick={() => advanceScreenshot(-1, Object.keys(screenshots).length)}>previous image</button>

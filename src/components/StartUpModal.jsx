@@ -61,11 +61,12 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 			let comments = {};
 			for(let frame of data.annotatedFrames) {
 				let timestamp = frame.metadata.timestamp;
-				if (frame.comment != null) {
+				console.log(frame);
+				if (frame.metadata.comment != null) {
 					
-					comments.timestamp = frame.comment;
+					comments[timestamp] = frame.metadata.comment;
 				} else {
-					comments.timestamp = "";
+					comments[timestamp] = "";
 				}
 				let temp = [];
 
