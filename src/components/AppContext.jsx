@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import StartUpModal from "./StartUpModal";
-import "../styles/App.css";
 import ExportModal from "./ExportModal";
+import "../styles/App.css";
 
 const AnnotationsContext = createContext();
 const UpdateAnnotationsContext = createContext();
@@ -150,7 +150,6 @@ const AppContext = ({ children }) => {
 
 	const setFrameComments = (frameCommentsN) => {
 		localStorage.setItem("frameComments", JSON.stringify(frameCommentsN));
-		console.log("set frame comments in localStorage ", JSON.stringify(frameCommentsN));
 		setFrameCommentsS(frameCommentsN);
 	};
 

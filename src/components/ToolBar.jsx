@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useEffect, useState } from "react";
-import "../styles/ToolBar.css";
 import { BiShapePolygon, BiRectangle } from "react-icons/bi";
 import { MdPlayCircleOutline, MdPauseCircleOutline, MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
-import { FaTimes } from "react-icons/fa";
 import { useTool } from "./AppContext";
+import "../styles/ToolBar.css";
 
 const ToolBar = ({ pauseVideo, playVideo, previousFrame, nextFrame, playbackRate, width }) => {
 	const [tool, setTool] = useTool();

@@ -14,7 +14,6 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
     try {
         directory = await getExportDir(projName);
     } catch(err){
-        console.error(err);
     }
 
     // If directory is empty, user cancelled out of the dialog.
@@ -38,7 +37,6 @@ async function exportData(projName, videoPath, annotatedFrames, images) {
         await exportProjJSON(projName, data, directory);
         expImages = await exportProjImages(projName, images, directory);
     } catch (err) {
-        console.error(err);
         return {
             value: -1,
             images: expImages,
@@ -84,7 +82,6 @@ async function exportProjJSON(projName, data, dir){
     fs.writeFile(path.resolve(dir, fileName), json, (err) => {
         //error handling
         if (err){
-            console.error(err);
             throw err;
         }
     });
@@ -116,7 +113,6 @@ async function exportProjImages(projName, images, dir){
             fs.writeFile(path.resolve(dir, imgName), buf, (err) => {
                 //error handling
                 if (err){
-                    console.error(err);
                     throw err;
                 }
             });

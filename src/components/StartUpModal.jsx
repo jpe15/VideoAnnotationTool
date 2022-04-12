@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import React, {useState} from "react";
+import {useState} from "react";
+import { useProjectName, useStartUpModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
 import Modal from "react-modal/lib/components/Modal";
 import "../styles/Modals.css";
-import { useProjectName, useStartUpModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
 
 
 const customStyles = {
@@ -63,7 +63,6 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 			let comments = {};
 			for(let frame of data.annotatedFrames) {
 				let timestamp = frame.metadata.timestamp;
-				console.log(frame);
 				if (frame.metadata.comment != null) {
 					
 					comments[timestamp] = frame.metadata.comment;

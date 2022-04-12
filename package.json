@@ -1,5 +1,5 @@
 {
-  "name": "VideoAnnotationTool",
+  "name": "video_annotation_tool",
   "version": "0.1.0",
   "private": true,
   "main": "public/main.js",

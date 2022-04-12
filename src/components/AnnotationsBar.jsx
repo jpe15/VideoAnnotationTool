@@ -6,7 +6,7 @@ import { useAnnotations } from "./AppContext";
 import "../styles/Annotations.css";
 
 const AnnotationsBar = () => {
-	const [annotations, setAnnotations] = useAnnotations();
+	const [annotations] = useAnnotations();
 	const [existingLabels, setExistingLabels] = useState([]);
 
 	useEffect(() => {

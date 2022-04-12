@@ -65,7 +65,7 @@ ipcMain.on('export', (event, args) => {
     win.send('exported', res)
   })
   .catch(err => {
-    console.error(err)
+    // Do nothing
   })
 })
 
@@ -78,14 +78,11 @@ ipcMain.on('delete-image', (event, {projPath, imageToDelete}) => {
   try {
     fs.unlink(path.resolve(projPath, imageToDelete.imageName), (err) => {
       if (err) {
-        console.error(err);
-      }
-      else{
-        console.log('File deleted!');
+        // Do nothing
       }
     });
   }
   catch(err) {
-    console.error(err);
+    // Do nothing
   }
 })

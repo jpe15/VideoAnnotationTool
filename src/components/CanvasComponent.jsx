@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
-import React from "react" ;
 import { useState, useRef, useEffect } from "react";
-import Scrubber from "./Scrubber.jsx";
-import "../styles/Canvas.css";
 import { useAnnotations, useTool, useVideoPath, useScreenshots, useJumpToTime, useCurrentTime } from "./AppContext";
+import Scrubber from "./Scrubber.jsx";
 import ToolBar from "./ToolBar";
+import "../styles/Canvas.css";
 
 const CanvasComponent = () => {
 	const [screenshots, setScreenshots] = useScreenshots();
@@ -15,7 +15,6 @@ const CanvasComponent = () => {
 	const [videoSrc, setVideoSrc] = useState();
 	const [currentVideoPercent, setCurrentVideoPercent] = useState(0);
 	const [jumpToTime, setJumpToTime] = useJumpToTime(0);
-	const [lastTimeChange, setLastTimeChange] = useState(-2);
 	const [ready, setReady] = useState(false);
 	const [currentTime, setCurrentTime] = useCurrentTime();
 
@@ -203,7 +202,6 @@ const CanvasComponent = () => {
 		// Clear display canvas.
 		displayContext.clearRect(0, 0, drawingCanvas.current.getBoundingClientRect().width, drawingCanvas.current.getBoundingClientRect().height);
 		// Go over each annotation
-		let count = 0;
 		for (const annotation of annotations) {
 			if (annotation.selected) {
 				displayContext.strokeStyle = "blue";
@@ -222,7 +220,7 @@ const CanvasComponent = () => {
 				const [endX, endY] = percentToCanvasPixels(annotation["points"][1][0], annotation["points"][1][1]);
 				// Draw it on the display canvas.
 				displayContext.strokeRect(startX, startY, endX - startX, endY - startY);
-				displayContext.font = "14px Arial";
+				displayContext.font = "bolder 18px Arial";
 				displayContext.fillText(annotations.indexOf(annotation), startX, startY - 10);
 		
 			}
@@ -260,12 +258,10 @@ const CanvasComponent = () => {
 				displayContext.moveTo(lastX, lastY);
 				displayContext.lineTo(startX, startY);
 				displayContext.stroke();
-				displayContext.font = "14px Arial";
+				displayContext.font = "bolder 18px Arial";
 				let [x, y] = percentToCanvasPixels(annotation["points"][0][0], annotation["points"][0][1])
-				console.log(x, y - 5);
 				displayContext.fillText(annotations.indexOf(annotation), x, y - 10);
 			}
-			count++;
 		}
 	};
 
@@ -336,7 +332,6 @@ const CanvasComponent = () => {
 			// Store starting position
 			initialX = xPercent;
 			initialY = yPercent;
-			const [startX, startY] = percentToCanvasPixels(initialX, initialY);
 		}
 		// Check if we are meant to be drawing a polygon.
 		else if (tool == 1) {
@@ -416,8 +411,6 @@ const CanvasComponent = () => {
 			// Add this to the list of annotations.
 			let newAnnotation = {};
 			newAnnotation["type"] = "BOX";
-			// newAnnotation["start"] = [initialX, initialY];
-			// newAnnotation["end"] = [xPercent, yPercent];
 		
 			newAnnotation["timestamp"] = videoElement.current.currentTime;
 			newAnnotation["label"] = "";
@@ -484,8 +477,6 @@ const CanvasComponent = () => {
 				{videoSrc && <Scrubber currentPercent={currentVideoPercent} gotoPercent={gotoPercent}></Scrubber>}
 				{videoSrc && <ToolBar playVideo={playVideo} pauseVideo={pauseVideo} playbackRate={playbackRate} nextFrame={nextFrame} previousFrame={previousFrame}></ToolBar>}
 			</div>
-			{/* <button onClick={() => {currentTool = 0;}}>Draw bounding box</button>
-			<button onClick={() => {currentTool = 1;}}>Draw polygon.</button> */}
 		</>
 	);
 };

@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useProjectName, useExportModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
 import Modal from "react-modal/lib/components/Modal";
 import "../styles/Modals.css";
-import { useProjectName, useExportModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
 const electron = window.require("electron");
 
 class AnnotatedFrame {
@@ -41,18 +42,15 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 const ExportModal = ({ isOpen, createNewProject }) => {
-	const [isNewProj, setIsNewProj] = useState(false);
-	const [newProjName, setNewProjName] = useState("");
-	const [projName, setProjectName] = useProjectName();
+	const [projName] = useProjectName();
 	const [projPath] = useProjPath();
-	const [videoPath, setVideoPath] = useVideoPath();
+	const [videoPath] = useVideoPath();
 	const [, setIsExportModal] = useExportModal();
 	const [, setProjPath] = useProjPath();
 	const [screenshots, setScreenshots] = useScreenshots();
-	const [annotations, setAnnotations] = useAnnotations();
+	const [annotations] = useAnnotations();
 	const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0);
 	const [frameComments, setFrameComments] = useFrameComments();
-	const [currentFrameComments, setCurrentFrameComments] = useState({});
 
 	const inputRef = useRef();
 
@@ -112,10 +110,8 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 		electron.ipcRenderer.once("exported", (e, ret) => {
 			if (ret.value != 1) {	
 				let newScreenshots = {};
-				console.log(ret);
 				for (let i = 0; i < ret.images.length; i++) {
 					newScreenshots[ret.images[i].timestamp] = {"imageName":ret.images[i].name};
-					//console.log(newScreenshots[ret.imageNames[i].timestamp]);
 				}
 	
 				setProjPath(ret.folder);
@@ -152,7 +148,6 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 	const updateComment = (comment) => {
 		let keys = Object.keys(screenshots);
 		let currKey = keys[currentScreenshotIndex];
-		console.log("updating comment: ", comment);
 		let curr = frameComments;
 		curr[currKey] = comment;
 		setFrameComments(curr);
@@ -163,9 +158,9 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 		for (let idx in screenshots) {
 			if (currentScreenshotIndex == keys.indexOf(idx)) {
 				if (screenshots[idx].imageName === "") {
-					return <img src={screenshots[idx].screenshot}></img>;
+					return <img src={screenshots[idx].screenshot} alt={`Screenshot from timestamp: ${idx}`}></img>;
 				} else {
-					return <img src={`File://${projPath}/${screenshots[idx].imageName}`}></img>;
+					return <img src={`File://${projPath}/${screenshots[idx].imageName}`} alt={`Screenshot from timestamp: ${idx}`}></img>;
 				}
 			}
 		}
@@ -177,7 +172,6 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 			<div className="modal__body--images">
 				{getImages()}
 				<input ref={inputRef} type="text" className="modal__body--images--textarea" placeholder="Comment here..." onBlur={(e) => updateComment(e.target.value)}></input>
-				{/* {frameComments[Object.keys(frameComments)[currentScreenshotIndex]] && <div className="modal__body--p"><b>Existing comment: </b><p> {frameComments[Object.keys(frameComments)[currentScreenshotIndex]]}</p></div>} */}
 			</div>
 			<div className="export-modal__footer">
 				<button className="modal__button" onClick={() => advanceScreenshot(-1, Object.keys(screenshots).length)}>Previous Image</button>

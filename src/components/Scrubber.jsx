@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import "../styles/Scrubber.css";
 
 const Scrubber = ({ currentPercent, gotoPercent }) => {

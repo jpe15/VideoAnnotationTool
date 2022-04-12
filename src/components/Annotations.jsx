@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useAnnotations, useJumpToTime, useScreenshots, useProjPath } from "./AppContext";
 import "../styles/Annotations.css";
 import { MdDeleteForever } from "react-icons/md";
@@ -8,7 +8,7 @@ const electron = window.require("electron");
 
 const Annotations = ({ annotation, index, existingLabels }) => {
 	const [annotations, setAnnotations] = useAnnotations();
-	const [jumpToTime, setJumpToTime] = useJumpToTime();
+	const [, setJumpToTime] = useJumpToTime();
 	const [screenshots, setScreenshots] = useScreenshots();
 	const [projPath] = useProjPath();
 
@@ -79,7 +79,7 @@ const Annotations = ({ annotation, index, existingLabels }) => {
 		}
 		setJumpToTime(annotation.timestamp);
 	};
-	//updateComment
+
 	return (
 		<div className="card">
 			<h4 style={{ color: "black", margin: "0" }}>
@@ -123,11 +123,6 @@ const Annotations = ({ annotation, index, existingLabels }) => {
 					Show Annotation
 				</button>
 			</div>
-			{/* <p style = {{color: "white"}}> */}
-			{/* {annotation?.points.map((point) => { */}
-			{/* return <p style = {{color: "white"}} > {point}</p>; */}
-			{/* })} */}
-			{/* </p> */}
 		</div>
 	);
 };

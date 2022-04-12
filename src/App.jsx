@@ -1,21 +1,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import "./styles/App.css";
-import { useState, useRef, useEffect, createContext } from "react";
-import CanvasComponent from "./components/CanvasComponent.jsx";
-import AppContext from "./components/AppContext";
-import TopButtons from "./components/TopButtons";
 import AnnotationsBar from "./components/AnnotationsBar";
+import AppContext from "./components/AppContext";
+import CanvasComponent from "./components/CanvasComponent.jsx";
+import TopButtons from "./components/TopButtons";
+import "./styles/App.css";
 
 function App() {
-	const [videoPath, setVideoPath] = useState("");
-	const [annotations, setAnnotations] = useState([]);
 
 	return (
 		<AppContext>
 			<div className="Top-Buttons"><TopButtons projName={"test"}></TopButtons></div>
 			<div className="Annotations"><AnnotationsBar></AnnotationsBar></div>
-			<div className="Canvas-Component"><CanvasComponent videoSrc={videoPath}></CanvasComponent></div>
+			<div className="Canvas-Component"><CanvasComponent></CanvasComponent></div>
 		</AppContext>
 	);
 }
