@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
 import { useEffect } from "react";
 import { useAnnotations, useJumpToTime, useScreenshots, useProjPath } from "./AppContext";

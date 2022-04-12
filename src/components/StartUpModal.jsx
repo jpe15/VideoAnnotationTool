@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
 import {useState} from "react";
 import { useProjectName, useStartUpModal, useVideoPath, useProjPath, useScreenshots, useAnnotations, useFrameComments } from "./AppContext";
@@ -114,14 +115,14 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 					{!isNewProj && <button onClick={() => {setIsNewProj(true);}}>Create Project</button>}
 					{isNewProj && <input placeholder="Name your project" onChange={(e) => {setNewProjName(e.target.value)}}></input>}
 					{newProjName !== "" && isNewProj && <button onClick={() => {uploadFile();}}>Select Video</button>}
-					<input id="selectFileN" type={"file"} style={{ display: "none" }} onChange={(e) => {createNewProject(e.target.files[0].path, newProjName);}}></input>
+					<input id="selectFileN" type={"file"} accept=".mp4" style={{ display: "none" }} onChange={(e) => {createNewProject(e.target.files[0].path, newProjName);}}></input>
 				</div>
 				<button onClick={() => {setIsNewProj(false); importProj();}}>Import Project</button>
 			</div>
 			{!isNewProj && <div className="modal__footer">
 				<p>If importing an existing project, make sure to select your 'json' metadata file that was previously exported</p>
 			</div>}
-			<input id="selectJSON" type={"file"} style={{ display: "none" }} onChange={(e) => uploadJSON(e)}></input>
+			<input id="selectJSON" type={"file"} accept=".json" style={{ display: "none" }} onChange={(e) => uploadJSON(e)}></input>
 		</Modal>
 	);
 };

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
 import { useEffect, useState, useRef } from "react";
 import "../styles/Scrubber.css";

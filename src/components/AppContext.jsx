@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
 import { createContext, useContext, useState, useEffect } from "react";
 import StartUpModal from "./StartUpModal";

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
 import { BiShapePolygon, BiRectangle } from "react-icons/bi";
 import { MdPlayCircleOutline, MdPauseCircleOutline, MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";

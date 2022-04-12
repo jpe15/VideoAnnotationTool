@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+/* eslint-disable */
 
 import styled from "styled-components";
 import { useStartUpModal, useExportModal, useVideoPath } from "./AppContext";
