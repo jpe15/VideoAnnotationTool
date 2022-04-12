@@ -10,9 +10,14 @@ let win = null
 
 function createWindow() {
   // Create the browser window.
+  //The current aspect ratio is 16:9 (1920x1080)
+  //The minimum aspect ratio will be 16:9 (1280×720)
+  //The Browser resizing ratio is set here.
   win = new BrowserWindow({
     width: 1920,
     height: 1080,
+    minWidth:1280,
+    minHeight: 720,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
