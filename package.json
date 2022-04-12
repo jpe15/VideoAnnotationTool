@@ -53,5 +53,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "build": {
+    "mac": {
+       "icon": "build/logo.png"
+    },
+    "win": {
+       "icon": "build/logo.png"
+    }
+ }
 }

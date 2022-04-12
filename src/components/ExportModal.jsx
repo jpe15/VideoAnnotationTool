@@ -127,14 +127,24 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 	const advanceScreenshot = (num, len) => {
 		if (num == 1) {
 			if (currentScreenshotIndex < len - 1) {
+				if (frameComments[Object.keys(frameComments)[currentScreenshotIndex+ 1]] != null || frameComments[Object.keys(frameComments)[currentScreenshotIndex+ 1]] != "") {
+					inputRef.current.value = frameComments[Object.keys(frameComments)[currentScreenshotIndex+ 1]];
+				} else {
+					inputRef.current.value = "";
+				}
 				setCurrentScreenshotIndex(currentScreenshotIndex + 1);
 			}
 		} else {
 			if (currentScreenshotIndex > 0) {
+				if (frameComments[Object.keys(frameComments)[currentScreenshotIndex- 1]] != null || frameComments[Object.keys(frameComments)[currentScreenshotIndex- 1]] != "") {
+					inputRef.current.value = frameComments[Object.keys(frameComments)[currentScreenshotIndex- 1]];
+				} else {
+					inputRef.current.value = "";
+				}
 				setCurrentScreenshotIndex(currentScreenshotIndex - 1);
 			}
 		}
-		inputRef.current.value = "";
+		
 	};
 
 	const updateComment = (comment) => {
@@ -165,11 +175,11 @@ const ExportModal = ({ isOpen, createNewProject }) => {
 			<div className="modal__body--images">
 				{getImages()}
 				<input ref={inputRef} type="text" className="modal__body--images--textarea" placeholder="Comment here..." onBlur={(e) => updateComment(e.target.value)}></input>
-				{frameComments[Object.keys(frameComments)[currentScreenshotIndex]] && <div className="modal__body--p"><b>Existing comment: </b><p> {frameComments[Object.keys(frameComments)[currentScreenshotIndex]]}</p></div>}
+				{/* {frameComments[Object.keys(frameComments)[currentScreenshotIndex]] && <div className="modal__body--p"><b>Existing comment: </b><p> {frameComments[Object.keys(frameComments)[currentScreenshotIndex]]}</p></div>} */}
 			</div>
 			<div className="export-modal__footer">
-				<button className="modal__button" onClick={() => advanceScreenshot(-1, Object.keys(screenshots).length)}>previous image</button>
-				<button className="modal__button" onClick={() => advanceScreenshot(1, Object.keys(screenshots).length)}>next image</button>
+				<button className="modal__button" onClick={() => advanceScreenshot(-1, Object.keys(screenshots).length)}>Previous Image</button>
+				<button className="modal__button" onClick={() => advanceScreenshot(1, Object.keys(screenshots).length)}>Next Image</button>
 				<button className="modal__button" onClick={() => {sendExport();}}>Export</button>
 			</div>
 		</Modal>

@@ -85,8 +85,8 @@ const Annotations = ({ annotation, index, existingLabels }) => {
 					<input type={"text"} value={annotation.label} placeholder={"Select Label..."} list="browsers" name="myBrowser" onChange={(e) => updateLabel(e.target.value)}/>
 				</label>
 				<datalist id="browsers">
-					{existingLabels.map((l) => {
-            return <option value={l}/>
+					{existingLabels.map((l, i) => {
+            return <option key={i} value={l}/>
           })}
 				</datalist>
 			</h4>
