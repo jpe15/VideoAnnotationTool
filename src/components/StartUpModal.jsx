@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import React, {useState} from "react";
 import Modal from "react-modal/lib/components/Modal";
 import "../styles/Modals.css";

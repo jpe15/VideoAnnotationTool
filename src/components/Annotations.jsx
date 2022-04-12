@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import React, { useEffect } from "react";
 import { useAnnotations, useJumpToTime, useScreenshots, useProjPath } from "./AppContext";
 import "../styles/Annotations.css";

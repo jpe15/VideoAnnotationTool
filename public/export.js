@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 const { dialog } = require('electron')
 const path = require('path')
 const fs = require('fs')

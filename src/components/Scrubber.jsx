@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import React, { useEffect, useState, useRef } from "react";
 import "../styles/Scrubber.css";
 

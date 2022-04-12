@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import StartUpModal from "./StartUpModal";
 import "../styles/App.css";

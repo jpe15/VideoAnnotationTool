@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 const { app, BrowserWindow, ipcMain, ipcRenderer } = require('electron')
 const isDev = require('electron-is-dev')
 const exportData = require('./export')

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import "./styles/App.css";
 import { useState, useRef, useEffect, createContext } from "react";
 import CanvasComponent from "./components/CanvasComponent.jsx";

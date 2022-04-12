@@ -1,4 +1,4 @@
-// This is an example of how to export files, but will likely not be it's own component.
+// SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from "react";
 import { useAnnotations, useScreenshots, useVideoPath } from "./AppContext";

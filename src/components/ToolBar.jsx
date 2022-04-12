@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import React, { useEffect, useState } from "react";
 import "../styles/ToolBar.css";
 import { BiShapePolygon, BiRectangle } from "react-icons/bi";
