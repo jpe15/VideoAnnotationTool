@@ -30,7 +30,7 @@ body {
 	gap: 0px 0px;
 	grid-auto-flow: row;
 	grid-template-areas:
-		"Top-Buttons Top-Buttons Top-Buttons Top-Buttons"
+		"Project-Name Project-Name Top-Buttons Top-Buttons"
 		"Annotations Canvas-Component Canvas-Component Canvas-Component"
 		"Annotations Canvas-Component Canvas-Component Canvas-Component"
 		"Annotations Canvas-Component Canvas-Component Canvas-Component";
@@ -48,6 +48,18 @@ body {
 	flex-direction: row;
 	gap: 1rem;
 	align-items: center;
+}
+
+.Project-Name {
+	grid-area: Project-Name;
+	background-color: black;
+	font-family: Roboto, sans-serif;
+	font-size: x-large;
+	color: white;
+	display: flex;
+	justify-content: left;
+	align-items: center;
+	padding: 0rem 2rem 0rem 2rem;
 }
 
 .Annotations {

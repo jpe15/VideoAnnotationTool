@@ -20,6 +20,7 @@ function createWindow() {
     height: 1080,
     minWidth:1280,
     minHeight: 720,
+    autoHideMenuBar: true,
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
@@ -85,4 +86,9 @@ ipcMain.on('delete-image', (event, {projPath, imageToDelete}) => {
   catch(err) {
     // Do nothing
   }
+})
+
+ipcMain.on('new-project', (event) => {
+  console.log('new project');
+  win.reload()
 })

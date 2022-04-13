@@ -1,5 +1,11 @@
 # VideoAnnotationTool
 
+## What is it?
+A tool which enables the user to import a video of their choice and start a project based on this video, in which the user can navigate through the frames of the chosen video, and add annotations as a form of metadata to the frames of the video.
+
+The user can then export this metadata in the form of a JSON file, along with PNG images of the annotated frames. Since the tool is project-based, the user can import projects which have previously been exported using that project's JSON file.
+
+
 ## Information about code bundle
 
 The application is built and packaged using Electron JS.

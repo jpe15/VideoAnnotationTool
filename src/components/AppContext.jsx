@@ -6,6 +6,8 @@ import StartUpModal from "./StartUpModal";
 import ExportModal from "./ExportModal";
 import "../styles/App.css";
 
+const electron = window.require("electron");
+
 const AnnotationsContext = createContext();
 const UpdateAnnotationsContext = createContext();
 const ToolContext = createContext();
@@ -189,6 +191,7 @@ const AppContext = ({ children }) => {
 		setFrameComments({});
 		setIsStartUpModal(false);
 		setIsExportModal(false);
+		electron.ipcRenderer.send("new-project");
 	};
 
 	return (
