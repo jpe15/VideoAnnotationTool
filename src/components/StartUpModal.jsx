@@ -122,7 +122,7 @@ const StartUpModal = ({ isOpen, createNewProject }) => {
 			{!isNewProj && <div className="modal__footer">
 				<p>If importing an existing project, make sure to select your 'json' metadata file that was previously exported</p>
 			</div>}
-			<input id="selectJSON" type={"file"} accept=".json" style={{ display: "none" }} onChange={(e) => uploadJSON(e)}></input>
+			<input id="selectJSON" type={"file"} accept=".json" style={{ display: "none" }} onChange={(e) => {uploadJSON(e); setIsStartUpModal(false);}}></input>
 		</Modal>
 	);
 };
